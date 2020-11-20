@@ -1,26 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import 'fontsource-roboto';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { FirebaseDatabaseProvider } from '@react-firebase/database';
 
-function App() {
+import theme from './theme';
+import Router from './Router';
+import db from './firebase';
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FirebaseDatabaseProvider firebase={db}>
+      <ThemeProvider theme={theme}>
+        <Router />
+      </ThemeProvider>
+    </FirebaseDatabaseProvider>
   );
-}
+};
 
 export default App;
