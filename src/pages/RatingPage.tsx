@@ -82,7 +82,8 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
         currentBeer={activeBeer}
         currentUserId={currentUser.id}
         currentRating={
-          currentUser.ratings && currentUser.ratings[activeBeer.id]
+          currentUser.ratings &&
+          currentUser.ratings[activeBeer.id] !== undefined
             ? currentUser.ratings[activeBeer.id]
             : null
         }
