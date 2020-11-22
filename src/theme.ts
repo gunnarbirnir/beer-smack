@@ -17,6 +17,10 @@ export default createMuiTheme({
     h2: {
       fontSize: 40,
       fontWeight: 'bold',
+      lineHeight: 1.1,
+    },
+    h5: {
+      fontSize: 20,
     },
   },
 });

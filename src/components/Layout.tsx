@@ -35,7 +35,6 @@ const Layout: React.FC<IProps> = ({
   fullWidth = false,
 }) => {
   const classes = useStyles();
-
   var content = null;
 
   if (loading) {

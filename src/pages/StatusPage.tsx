@@ -15,7 +15,7 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
 
   return (
     <Layout loading={loading} error={!room ? 'Room not found' : undefined}>
-      <Typography variant="h1">Status</Typography>
+      <Typography variant="h2">Status</Typography>
     </Layout>
   );
 };

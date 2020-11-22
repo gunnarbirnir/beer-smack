@@ -19,7 +19,7 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       loading={loading}
       error={!room ? 'Room not found' : undefined}
     >
-      <Typography variant="h1">Admin</Typography>
+      <Typography variant="h2">Admin</Typography>
     </Layout>
   );
 };

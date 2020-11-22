@@ -4,10 +4,19 @@ import firebase from 'firebase/app';
 import { IRoom, IBeer, IUser } from '../interfaces';
 
 function useRoom(roomCode: string) {
-  const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<IRoom | null>(null);
-  const beers: IBeer[] = room ? Object.values(room.beers) : [];
-  const users: IUser[] = room ? Object.values(room.users) : [];
+  const [loading, setLoading] = useState(true);
+
+  const beers: IBeer[] =
+    room && room.beers
+      ? Object.values(room.beers)
+          .filter((b) => b.active)
+          .sort(sortBeers)
+      : [];
+  const users: IUser[] =
+    room && room.users ? Object.values(room.users).sort(sortUsers) : [];
+  const activeBeerIndex =
+    room && room.hasStarted ? getActiveBeerIndex(beers) : null;
 
   useEffect(() => {
     const path = `rooms/${roomCode}`;
@@ -22,7 +31,26 @@ function useRoom(roomCode: string) {
     return () => firebase.database().ref(path).off('value', listener);
   }, [roomCode]);
 
-  return { room, loading, beers, users };
+  return { room, loading, beers, users, activeBeerIndex };
+}
+
+function sortBeers(a: IBeer, b: IBeer) {
+  return a.index - b.index;
+}
+
+function sortUsers(a: IUser, b: IUser) {
+  return a.timestamp - b.timestamp;
+}
+
+function getActiveBeerIndex(beers: IBeer[]) {
+  let index = 0;
+  for (const beer of beers) {
+    if (!beer.finished) {
+      return index;
+    }
+    index++;
+  }
+  return null;
 }
 
 export default useRoom;
