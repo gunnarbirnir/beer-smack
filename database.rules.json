@@ -1,6 +1,20 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    ".write": false,
+    "rooms": {
+      "$room_id": {
+        "users": {
+          ".write": true,
+          "$user_id": {
+            "ratings": {
+              "$beer_id": {
+                ".validate": "newData.isNumber() && newData.val()>=0 && newData.val()<=10"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
