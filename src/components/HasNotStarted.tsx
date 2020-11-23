@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, makeStyles, Grid } from '@material-ui/core';
-import cx from 'classnames';
 
 import { IUser } from '../interfaces';
+import ListItem from './ListItem';
 
 interface IProps {
   roomTitle: string;
@@ -13,16 +13,7 @@ interface IProps {
 
 const useStyles = makeStyles((theme) => ({
   userList: {
-    marginTop: theme.spacing(2),
-  },
-  userItem: {
-    padding: theme.spacing(1, 2),
-    backgroundColor: theme.palette.grey[200],
-    borderRadius: theme.shape.borderRadius,
-    marginTop: theme.spacing(2),
-  },
-  currentUser: {
-    backgroundColor: theme.palette.secondary.light,
+    marginTop: theme.spacing(3),
   },
   statusText: {
     marginBottom: theme.spacing(2),
@@ -49,20 +40,17 @@ const HasNotStarted: React.FC<IProps> = ({
         {beerCount} bjórar á dagskrá
       </Typography>
       <Typography color="textSecondary">
-        {users.length} {users.length === 1 ? 'þátttakandi' : 'þátttakendur'}
+        {users.length} {users.length === 1 ? 'þátttakandi:' : 'þátttakendur:'}
       </Typography>
-      <Grid container direction="column" className={classes.userList}>
+      <div className={classes.userList}>
         {users.map((user) => (
-          <Typography
+          <ListItem
             key={user.id}
-            className={cx(classes.userItem, {
-              [classes.currentUser]: user.id === currentUserId,
-            })}
-          >
-            {user.name}
-          </Typography>
+            mainText={user.name}
+            highlighted={user.id === currentUserId}
+          />
         ))}
-      </Grid>
+      </div>
     </React.Fragment>
   );
 };

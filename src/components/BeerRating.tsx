@@ -87,7 +87,7 @@ const BeerRating: React.FC<IProps> = ({
           color="textSecondary"
           style={{ marginTop: theme.spacing(1) }}
         >
-          Einkunn hefur verið skráð: {currentRating}
+          Einkunn hefur verið skráð: {currentRating.toFixed(1)}
         </Typography>
       )}
       {ratingError && (

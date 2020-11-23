@@ -16,7 +16,9 @@ function useRoom(roomCode: string) {
   const users: IUser[] =
     room && room.users ? Object.values(room.users).sort(sortUsers) : [];
   const activeBeerIndex =
-    room && room.hasStarted ? getActiveBeerIndex(beers) : null;
+    room && room.hasStarted
+      ? getActiveBeerIndex(beers, room.finished || {})
+      : null;
 
   useEffect(() => {
     const path = `rooms/${roomCode}`;
@@ -42,10 +44,13 @@ function sortUsers(a: IUser, b: IUser) {
   return a.timestamp - b.timestamp;
 }
 
-function getActiveBeerIndex(beers: IBeer[]) {
+function getActiveBeerIndex(
+  beers: IBeer[],
+  finished: { [beerId: string]: boolean }
+) {
   let index = 0;
   for (const beer of beers) {
-    if (!beer.finished) {
+    if (!finished[beer.id]) {
       return index;
     }
     index++;

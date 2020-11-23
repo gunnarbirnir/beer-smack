@@ -2,8 +2,8 @@ import React from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 
 import { IRating, IBeer } from '../interfaces';
-import { RATING_MAX } from '../constants';
 import InfoItem from './InfoItem';
+import ListItem from './ListItem';
 
 interface IProps {
   roomTitle: string;
@@ -14,6 +14,9 @@ interface IProps {
 const useStyles = makeStyles((theme) => ({
   statusText: {
     marginBottom: theme.spacing(2),
+  },
+  ratingList: {
+    marginTop: theme.spacing(3),
   },
 }));
 
@@ -28,20 +31,26 @@ const HasEnded: React.FC<IProps> = ({ roomTitle, userRatings, roomBeers }) => {
       <Typography color="primary" variant="h5" className={classes.statusText}>
         Smökkun lokið
       </Typography>
-      {userRatings && (
+      {userRatings && roomBeers && (
         <React.Fragment>
           <InfoItem
             label="Þín meðaleinkunn"
             text={getUserAvgRating(userRatings)}
+            gutterBottom={false}
           />
-          <InfoItem
-            label="Uppáhalds bjór"
-            text={getUserFavoriteBeer(userRatings)}
-          />
-          <InfoItem
-            label="Versti bjór"
-            text={getUserLeastFavoriteBeer(userRatings)}
-          />
+          <Typography color="textSecondary">Þínar einkunnir:</Typography>
+          <div className={classes.ratingList}>
+            {Object.keys(userRatings)
+              .sort((a, b) => userRatings[b] - userRatings[a])
+              .map((beerId, index) => (
+                <ListItem
+                  key={beerId}
+                  highlighted={index === 0}
+                  mainText={`${index + 1}. ${roomBeers[beerId].name}`}
+                  secondaryText={userRatings[beerId].toFixed(1)}
+                />
+              ))}
+          </div>
         </React.Fragment>
       )}
     </React.Fragment>
@@ -54,7 +63,7 @@ const HasEnded: React.FC<IProps> = ({ roomTitle, userRatings, roomBeers }) => {
     return (total / ratingsList.length).toFixed(2);
   }
 
-  function getUserFavoriteBeer(ratings: IRating) {
+  /* function getUserFavoriteBeer(ratings: IRating) {
     let highest = 0;
     let favorite = '';
 
@@ -82,7 +91,7 @@ const HasEnded: React.FC<IProps> = ({ roomTitle, userRatings, roomBeers }) => {
       }
     });
     return leastFavorite;
-  }
+  } */
 };
 
 export default HasEnded;

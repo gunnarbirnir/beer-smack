@@ -4,6 +4,7 @@ export interface IRoom {
   hasStarted: boolean;
   users?: { [id: string]: IUser };
   beers?: { [id: string]: IBeer };
+  finished?: { [beerId: string]: boolean };
 }
 
 export interface IUser {
@@ -17,7 +18,6 @@ export interface IBeer {
   id: string;
   index: number;
   active: boolean;
-  finished: boolean;
   name: string;
   type: string;
   abv: number;
