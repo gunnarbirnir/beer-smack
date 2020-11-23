@@ -1,17 +1,44 @@
-import React from 'react';
-import { Typography, makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Typography, makeStyles, Button, Grid } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
+import firebase from 'firebase/app';
 
 import useRoom from '../hooks/useRoom';
 import Layout from '../components/Layout';
+import ListItem from '../components/ListItem';
+import { CONTENT_WIDTH } from '../constants';
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  statusText: {
+    marginBottom: theme.spacing(3),
+  },
+  error: {
+    color: theme.palette.error.main,
+    marginTop: theme.spacing(1),
+  },
+  nextPrevButtons: {
+    marginTop: theme.spacing(3),
+  },
+  beerList: {
+    marginTop: theme.spacing(3),
+  },
+}));
 
 const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   match,
 }) => {
   const classes = useStyles();
-  const { room, loading } = useRoom(match.params.code);
+  const { room, loading, activeBeerIndex, beers } = useRoom(match.params.code);
+  const [loadingStateChange, setLoadingStateChange] = useState(false);
+  const [stateChangeError, setStateChangeError] = useState('');
+
+  const activeBeer = activeBeerIndex !== null ? beers[activeBeerIndex] : null;
+  const previousBeer =
+    activeBeerIndex === null
+      ? room && room.hasStarted
+        ? beers[beers.length - 1]
+        : null
+      : beers[activeBeerIndex - 1];
 
   return (
     <Layout
@@ -19,9 +46,149 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       loading={loading}
       error={!room ? 'Room not found' : undefined}
     >
-      <Typography variant="h2">Admin</Typography>
+      {renderContent()}
+      {stateChangeError && (
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          className={classes.error}
+        >
+          {stateChangeError}
+        </Typography>
+      )}
     </Layout>
   );
+
+  function renderContent() {
+    if (!room) {
+      return null;
+    }
+
+    if (!room.hasStarted) {
+      return (
+        <React.Fragment>
+          <Typography variant="h2" gutterBottom>
+            {room.title}
+          </Typography>
+          <Typography
+            color="primary"
+            variant="h5"
+            className={classes.statusText}
+          >
+            Smökkunin er ekki byrjuð
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={loadingStateChange}
+            style={{ maxWidth: CONTENT_WIDTH / 2 }}
+            onClick={startTasting}
+          >
+            Byrja
+          </Button>
+        </React.Fragment>
+      );
+    }
+
+    if (!activeBeer) {
+      return (
+        <React.Fragment>
+          <Typography variant="h2" gutterBottom>
+            {room.title}
+          </Typography>
+          <Typography
+            color="primary"
+            variant="h5"
+            className={classes.statusText}
+          >
+            Smökkun lokið
+          </Typography>
+          {renderNextPrevButtons()}
+        </React.Fragment>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <Typography variant="h2" gutterBottom>
+          {activeBeer.name}
+        </Typography>
+        {renderNextPrevButtons()}
+        <div className={classes.beerList}>
+          {beers.map((beer, index) => (
+            <ListItem
+              key={beer.id}
+              mainText={beer.name}
+              highlighted={index === activeBeerIndex}
+            />
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  function renderNextPrevButtons() {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        className={classes.nextPrevButtons}
+      >
+        <Button
+          variant="contained"
+          color="secondary"
+          disabled={!previousBeer || loadingStateChange}
+          onClick={() => previousBeer && nextPrevBeer(previousBeer.id, false)}
+        >
+          Fyrri
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          disabled={!activeBeer || loadingStateChange}
+          onClick={() => activeBeer && nextPrevBeer(activeBeer.id, true)}
+        >
+          {activeBeerIndex === beers.length - 1 ? 'Ljúka smökkun' : 'Næsti'}
+        </Button>
+      </Grid>
+    );
+  }
+
+  function startTasting() {
+    setLoadingStateChange(true);
+
+    firebase
+      .database()
+      .ref(`rooms/${match.params.code}/hasStarted`)
+      .set(true)
+      .then(() => {
+        setLoadingStateChange(false);
+        setStateChangeError('');
+      })
+      .catch(() => {
+        setLoadingStateChange(false);
+        setStateChangeError('Villa kom upp');
+      });
+  }
+
+  function nextPrevBeer(beerId: string, next: boolean) {
+    setLoadingStateChange(true);
+
+    firebase
+      .database()
+      .ref(`rooms/${match.params.code}/finished/${beerId}`)
+      .set(next)
+      .then(() => {
+        setLoadingStateChange(false);
+        setStateChangeError('');
+      })
+      .catch(() => {
+        setLoadingStateChange(false);
+        setStateChangeError('Villa kom upp');
+      });
+  }
 };
 
 export default AdminPage;

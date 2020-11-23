@@ -54,6 +54,7 @@ const BeerRating: React.FC<IProps> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+
   const [ratingInput, setRatingInput] = useState('');
   const [updatingRating, setUpdatingRating] = useState(false);
   const [ratingError, setRatingError] = useState('');

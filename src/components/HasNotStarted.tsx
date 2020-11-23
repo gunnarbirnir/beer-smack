@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, makeStyles, Grid } from '@material-ui/core';
+import { Typography, makeStyles } from '@material-ui/core';
 
 import { IUser } from '../interfaces';
 import ListItem from './ListItem';

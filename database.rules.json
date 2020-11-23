@@ -4,6 +4,12 @@
     ".write": false,
     "rooms": {
       "$room_id": {
+        "hasStarted": {
+          ".write": true
+        },
+        "finished": {
+          ".write": true
+        },
         "users": {
           ".write": true,
           "$user_id": {
