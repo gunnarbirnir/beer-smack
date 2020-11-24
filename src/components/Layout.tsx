@@ -19,9 +19,10 @@ interface IProps {
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(3),
+    paddingBottom: theme.spacing(6),
   },
   loading: {
-    height: `calc(100vh - ${theme.spacing(3) * 2}px)`,
+    height: `calc(100vh - ${theme.spacing(3) + theme.spacing(6)}px)`,
   },
   contentWidth: {
     maxWidth: CONTENT_WIDTH,
