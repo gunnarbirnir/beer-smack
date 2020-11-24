@@ -12,6 +12,7 @@ import { CONTENT_WIDTH } from '../constants';
 interface IProps {
   loading?: boolean;
   error?: string;
+  padding?: boolean;
   fullWidth?: boolean;
 }
 
@@ -32,6 +33,7 @@ const Layout: React.FC<IProps> = ({
   loading,
   error,
   children,
+  padding = true,
   fullWidth = false,
 }) => {
   const classes = useStyles();
@@ -54,7 +56,10 @@ const Layout: React.FC<IProps> = ({
 
   return (
     <div
-      className={cx(classes.container, { [classes.contentWidth]: !fullWidth })}
+      className={cx({
+        [classes.container]: padding || content,
+        [classes.contentWidth]: !fullWidth || content,
+      })}
     >
       {content || children}
     </div>

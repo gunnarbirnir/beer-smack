@@ -19,6 +19,7 @@ function useRoom(roomCode: string) {
     room && room.hasStarted
       ? getActiveBeerIndex(beers, room.finished || {})
       : null;
+  const beerRatings = getBeerRatings(beers, users);
 
   useEffect(() => {
     const path = `rooms/${roomCode}`;
@@ -33,7 +34,7 @@ function useRoom(roomCode: string) {
     return () => firebase.database().ref(path).off('value', listener);
   }, [roomCode]);
 
-  return { room, loading, beers, users, activeBeerIndex };
+  return { room, loading, beers, users, activeBeerIndex, beerRatings };
 }
 
 function sortBeers(a: IBeer, b: IBeer) {
@@ -56,6 +57,25 @@ function getActiveBeerIndex(
     index++;
   }
   return null;
+}
+
+function getBeerRatings(beers: IBeer[], users: IUser[]) {
+  const beerRatings: { [beerId: string]: number } = {};
+
+  beers.forEach((beer) => {
+    let total = 0;
+    let count = 0;
+
+    users.forEach((user) => {
+      if (user.ratings && user.ratings[beer.id] !== undefined) {
+        total += user.ratings[beer.id];
+        count++;
+      }
+    });
+    beerRatings[beer.id] = total / count;
+  });
+
+  return beerRatings;
 }
 
 export default useRoom;

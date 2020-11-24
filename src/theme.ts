@@ -11,13 +11,19 @@ export default createMuiTheme({
   },
   typography: {
     h1: {
-      fontSize: 50,
+      fontSize: 80,
       fontWeight: 'bold',
     },
     h2: {
       fontSize: 40,
       fontWeight: 'bold',
       lineHeight: 1.1,
+    },
+    h3: {
+      fontSize: 35,
+    },
+    h4: {
+      fontSize: 30,
     },
     h5: {
       fontSize: 20,

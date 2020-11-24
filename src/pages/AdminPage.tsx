@@ -83,7 +83,7 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
             color="primary"
             disabled={loadingStateChange}
             style={{ maxWidth: CONTENT_WIDTH / 2 }}
-            onClick={startTasting}
+            onClick={() => startStopTasting(true)}
           >
             Byrja
           </Button>
@@ -138,15 +138,19 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       >
         <Button
           variant="contained"
-          color="secondary"
-          disabled={!previousBeer || loadingStateChange}
-          onClick={() => previousBeer && nextPrevBeer(previousBeer.id, false)}
+          color="primary"
+          disabled={loadingStateChange}
+          onClick={
+            previousBeer
+              ? () => nextPrevBeer(previousBeer.id, false)
+              : () => startStopTasting(false)
+          }
         >
           Fyrri
         </Button>
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           disabled={!activeBeer || loadingStateChange}
           onClick={() => activeBeer && nextPrevBeer(activeBeer.id, true)}
         >
@@ -156,13 +160,13 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     );
   }
 
-  function startTasting() {
+  function startStopTasting(start: boolean) {
     setLoadingStateChange(true);
 
     firebase
       .database()
       .ref(`rooms/${match.params.code}/hasStarted`)
-      .set(true)
+      .set(start)
       .then(() => {
         setLoadingStateChange(false);
         setStateChangeError('');

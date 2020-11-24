@@ -1,11 +1,13 @@
 import React from 'react';
-import { Typography, makeStyles, Grid } from '@material-ui/core';
+import { Typography, makeStyles, Grid, useTheme } from '@material-ui/core';
 import cx from 'classnames';
 
 interface IProps {
   mainText: string;
   secondaryText?: string;
   highlighted?: boolean;
+  padding?: boolean;
+  large?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -13,10 +15,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1, 2),
     backgroundColor: theme.palette.grey[200],
     borderRadius: theme.shape.borderRadius,
-    marginTop: theme.spacing(2),
   },
   highlighted: {
     backgroundColor: theme.palette.secondary.light,
+  },
+  largeText: {
+    fontSize: 25,
   },
 }));
 
@@ -24,18 +28,28 @@ const ListItem: React.FC<IProps> = ({
   mainText,
   secondaryText,
   highlighted = false,
+  padding = true,
+  large = false,
 }) => {
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <div
       className={cx(classes.listItem, {
         [classes.highlighted]: highlighted,
       })}
+      style={{ marginTop: padding ? theme.spacing(2) : 0 }}
     >
       <Grid container direction="row" justify="space-between">
-        <Typography>{mainText}</Typography>
-        {secondaryText && <Typography>{secondaryText}</Typography>}
+        <Typography className={cx({ [classes.largeText]: large })}>
+          {mainText}
+        </Typography>
+        {secondaryText && (
+          <Typography className={cx({ [classes.largeText]: large })}>
+            {secondaryText}
+          </Typography>
+        )}
       </Grid>
     </div>
   );
