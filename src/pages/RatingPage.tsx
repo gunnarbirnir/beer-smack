@@ -15,9 +15,7 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     match.params.code
   );
   const [currentUserId, setCurrentUserId] = useState('');
-  const [selectedBeerIndex, setSelectedBeerIndex] = useState(
-    activeBeerIndex || 0
-  );
+  const [selectedBeerIndex, setSelectedBeerIndex] = useState(0);
   const currentUser = room && room.users ? room.users[currentUserId] : null;
   const activeBeer = activeBeerIndex !== null ? beers[selectedBeerIndex] : null;
 

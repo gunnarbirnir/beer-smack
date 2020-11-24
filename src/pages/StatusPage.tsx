@@ -11,11 +11,13 @@ const useStyles = makeStyles((theme) => ({
   container: {
     minHeight: '100vh',
     width: '100%',
+    maxWidth: 1200,
     padding: '50px 100px',
+    margin: '0px auto',
   },
   title: {
     textAlign: 'center',
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(3),
   },
   statusText: {
     textAlign: 'center',
@@ -82,7 +84,7 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
         ])}
         <Grid container spacing={2}>
           {users.map((user) => (
-            <Grid key={user.id} item xs={12} sm={4}>
+            <Grid key={user.id} item xs={12} sm={6}>
               <ListItem large mainText={user.name} padding={false} />
             </Grid>
           ))}
@@ -92,30 +94,37 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   }
 
   function renderHasEnded(roomTitle: string) {
+    const filteredBeers = beers
+      .filter((b) => !!beerRatings[b.id] || beerRatings[b.id] === 0)
+      .sort((a, b) => beerRatings[b.id] - beerRatings[a.id]);
+    const isEven = filteredBeers.length % 2 === 0;
+
     return (
       <React.Fragment>
         <Typography variant="h1" className={classes.title}>
           {roomTitle}
         </Typography>
-        <Grid container spacing={2}>
-          {beers
-            .filter((b) => beerRatings[b.id] !== undefined)
-            .sort((a, b) => beerRatings[b.id] - beerRatings[a.id])
-            .map((beer, index) => (
-              <Grid item key={beer.id} xs={12} sm={index !== 0 ? 6 : 12}>
-                <ListItem
-                  large
-                  padding={false}
-                  highlighted={index === 0}
-                  mainText={`${index + 1}. ${beer.name}`}
-                  secondaryText={
-                    beerRatings[beer.id] !== undefined
-                      ? beerRatings[beer.id].toString()
-                      : undefined
-                  }
-                />
-              </Grid>
-            ))}
+        <Grid container spacing={2} style={{ marginTop: theme.spacing(2) }}>
+          {filteredBeers.map((beer, index) => (
+            <Grid
+              item
+              key={beer.id}
+              xs={12}
+              sm={index === 0 || (isEven && index === 1) ? 12 : 6}
+            >
+              <ListItem
+                large
+                padding={false}
+                highlighted={index === 0}
+                mainText={`${index + 1}. ${beer.name}`}
+                secondaryText={
+                  beerRatings[beer.id] !== undefined
+                    ? beerRatings[beer.id].toFixed(2).toString()
+                    : undefined
+                }
+              />
+            </Grid>
+          ))}
         </Grid>
       </React.Fragment>
     );
@@ -134,7 +143,7 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
         ])}
         <Grid container spacing={2}>
           {users.map((user) => (
-            <Grid key={user.id} item xs={12} sm={4}>
+            <Grid key={user.id} item xs={12} sm={6}>
               <ListItem
                 large
                 padding={false}

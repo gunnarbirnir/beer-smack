@@ -41,11 +41,7 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       : beers[activeBeerIndex - 1];
 
   return (
-    <Layout
-      fullWidth={false}
-      loading={loading}
-      error={!room ? 'Room not found' : undefined}
-    >
+    <Layout loading={loading} error={!room ? 'Room not found' : undefined}>
       {renderContent()}
       {stateChangeError && (
         <Typography
