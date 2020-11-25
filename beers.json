@@ -1,0 +1,112 @@
+{
+  "ChmjTLnZD": {
+    "id": "ChmjTLnZD",
+    "name": "Skyrjarmur",
+    "type": "Blueberry sour",
+    "index": 2,
+    "active": true,
+    "abv": 4.3,
+    "brewer": "Borg Brugghús",
+    "country": "Ísland",
+    "description": "Dökkfjólublár. Smásætur, léttur, súr, hverfandi beiskja. Bláber, mysa."
+  },
+  "HEHyPsNzV": {
+    "id": "HEHyPsNzV",
+    "name": "Hvít Jól",
+    "type": "Mandarínu white ale",
+    "index": 4,
+    "active": true,
+    "abv": 5,
+    "brewer": "Víking Brugghús",
+    "country": "Ísland",
+    "description": "Ljósgullinn, óskír. Sætuvottur, léttur, lítil beiskja. Korn, mandarína, sítrusbörkur, krydd."
+  },
+  "BV4pEBLKs": {
+    "id": "BV4pEBLKs",
+    "name": "Hurðaskellir",
+    "type": "Imperial porter",
+    "index": 6,
+    "active": true,
+    "abv": 11.5,
+    "brewer": "Borg Brugghús",
+    "country": "Ísland",
+    "description": "Svarbrúnn. Smásætur, þéttur, lítil beiskja. Ristað malt, súkkulaði, rúgbrauð, tunna."
+  },
+  "Snt1C03BX": {
+    "id": "Snt1C03BX",
+    "name": "Jólabóndi",
+    "type": "IPA",
+    "index": 8,
+    "active": true,
+    "abv": 6,
+    "brewer": "Víking Brugghús",
+    "country": "Ísland",
+    "description": "Gullinn, óskír. Sætuvottur, meðalfylltur, beiskur. Korn, sítrus, barr, þurrkaðir ávextir."
+  },
+  "eWAvutnkL": {
+    "id": "eWAvutnkL",
+    "name": "Segull 67 Jóla Bjór",
+    "type": "Amber ale",
+    "index": 5,
+    "active": true,
+    "abv": 5.4,
+    "brewer": "Segull 67 brugghús",
+    "country": "Ísland",
+    "description": "Brúnn, skýjaður. Ósætur, meðalfylltur, meðalbeiskja. Þurrkaðir ávextir, karamella, barkarkrydd."
+  },
+  "mjmyezIAN": {
+    "id": "mjmyezIAN",
+    "name": "Jóla Gull",
+    "type": "Helles",
+    "index": 7,
+    "active": true,
+    "abv": 5.4,
+    "brewer": "Ölgerðin Egill Skallagrímsson",
+    "country": "Ísland",
+    "description": "Rafgullinn. Ósætur, meðalfylltur, lítil beiskja. Malt, kandís, hey."
+  },
+  "wb1lfBC4U": {
+    "id": "wb1lfBC4U",
+    "name": "Einstök Doppelbock",
+    "type": "Doppelbock",
+    "index": 3,
+    "active": true,
+    "abv": 6.7,
+    "brewer": "Einstök Ölgerð",
+    "country": "Ísland",
+    "description": "Brúnn. Ósætur, þéttur, meðalbeiskja. Dökk karamella, súkkulaði, krydd, þurrkaðir ávextir."
+  },
+  "y8MQiORKJ": {
+    "id": "y8MQiORKJ",
+    "name": "Eitthvað fallegt?",
+    "type": "Session IPA",
+    "index": 1,
+    "active": true,
+    "abv": 5,
+    "brewer": "RVK Brewing",
+    "country": "Ísland",
+    "description": "Gullinn, skýjaður. Sætuvottur, meðalfylltur, beiskur. Sítrus, suðrænir ávextir, barr, krydd."
+  },
+  "fM10uYmbS": {
+    "id": "fM10uYmbS",
+    "name": "Jóla Kaldi",
+    "type": "Dunkel",
+    "index": 0,
+    "active": true,
+    "abv": 5.4,
+    "brewer": "Bruggsmiðjan Kaldi",
+    "country": "Ísland",
+    "description": "Rafbrúnn. Ósætur, meðalfylltur, meðalbeiskja. Ristað malt, karamella, þurrkaðir ávextir, hey."
+  },
+  "t3CMhH_e_": {
+    "id": "t3CMhH_e_",
+    "name": "Tveir vinir og annar í jólum",
+    "type": "Appelsínulager",
+    "index": 9,
+    "active": true,
+    "abv": 5,
+    "brewer": "Víking Brugghús",
+    "country": "Ísland",
+    "description": "Ljósgullinn, óskír. Ósætur, léttur, meðalbeiskja. Korn sítrus, grösugir tónar."
+  }
+}
