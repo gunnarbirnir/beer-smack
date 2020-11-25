@@ -77,7 +77,7 @@ const BeerRating: React.FC<IProps> = ({
         {currentBeer.name}
       </Typography>
       <InfoItem label="Tegund" text={currentBeer.type} />
-      <InfoItem label="Styrkleiki" text={`${currentBeer.abv}%`} />
+      <InfoItem label="Styrkleiki" text={`${currentBeer.abv.toFixed(1)}%`} />
       <InfoItem label="Framleiðandi" text={currentBeer.brewer} />
       <InfoItem label="Land" text={currentBeer.country} />
       <InfoItem label="Lýsing" text={currentBeer.description} />

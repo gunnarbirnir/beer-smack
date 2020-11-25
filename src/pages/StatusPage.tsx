@@ -138,7 +138,7 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
         </Typography>
         {renderStatusText([
           currentBeer.type,
-          `${currentBeer.abv}%`,
+          `${currentBeer.abv.toFixed(1)}%`,
           currentBeer.brewer,
         ])}
         <Grid container spacing={2}>

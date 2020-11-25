@@ -42,7 +42,10 @@ const ListItem: React.FC<IProps> = ({
       style={{ marginTop: padding ? theme.spacing(2) : 0 }}
     >
       <Grid container direction="row" justify="space-between">
-        <Typography className={cx({ [classes.largeText]: large })}>
+        <Typography
+          className={cx({ [classes.largeText]: large })}
+          style={{ marginRight: theme.spacing(2) }}
+        >
           {mainText}
         </Typography>
         {secondaryText && (
