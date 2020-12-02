@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.grey[300],
     borderRadius: theme.shape.borderRadius,
     marginBottom: theme.spacing(2),
-    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   input: {
     marginTop: theme.spacing(3),
@@ -76,6 +76,13 @@ const BeerRating: React.FC<IProps> = ({
   return (
     <React.Fragment>
       {renderStatus()}
+      {/* <Typography
+        variant="caption"
+        color="primary"
+        style={{ textTransform: 'uppercase' }}
+      >
+        Nr {currentBeer.index + 1}
+      </Typography> */}
       <Typography variant="h2" style={{ marginBottom: theme.spacing(3) }}>
         {currentBeer.name}
       </Typography>
@@ -109,7 +116,7 @@ const BeerRating: React.FC<IProps> = ({
 
   function renderStatus() {
     return (
-      <Grid container direction="row" justify="flex-end">
+      <Grid container direction="row" justify="flex-start">
         <Typography
           variant="caption"
           className={classes.statusItem}
@@ -117,11 +124,7 @@ const BeerRating: React.FC<IProps> = ({
         >
           {currentBeer.index + 1} / {beerCount.toString()}
         </Typography>
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          className={classes.statusItem}
-        >
+        <Typography variant="caption" className={classes.statusItem}>
           {currentUser.name}
         </Typography>
       </Grid>
