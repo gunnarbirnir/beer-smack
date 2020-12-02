@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@react-firebase/database": "^0.3.11",
     "classnames": "^2.2.6",
     "firebase": "^8.1.1",
     "fontsource-roboto": "^3.0.3",
+    "qs": "^6.9.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-number-format": "^4.4.1",
@@ -28,6 +30,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "@types/shortid": "^0.0.29",
+    "@types/qs": "^6.9.5",
     "got": "^11.8.0",
     "jsdom": "^16.4.0"
   },

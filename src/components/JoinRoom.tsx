@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import firebase from 'firebase/app';
 import shortid from 'shortid';
+import { useHistory } from 'react-router-dom';
 
 import { CONTENT_WIDTH } from '../constants';
 
@@ -34,6 +35,8 @@ const JoinRoom: React.FC<IProps> = ({
   setCurrentUserId,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
+
   const [nameInput, setNameInput] = useState('');
   const [joiningRoom, setJoiningRoom] = useState(false);
   const [joinError, setJoinError] = useState('');
@@ -102,7 +105,7 @@ const JoinRoom: React.FC<IProps> = ({
         setCurrentUserId(newUserId);
         setJoiningRoom(false);
         setJoinError('');
-        localStorage.setItem('userId', newUserId);
+        history.push({ search: `?user=${newUserId}` });
       })
       .catch(() => {
         setJoinError('Tókst ekki að búa til notanda');

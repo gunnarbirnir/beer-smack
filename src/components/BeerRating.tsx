@@ -11,13 +11,14 @@ import firebase from 'firebase/app';
 import NumberFormat from 'react-number-format';
 
 import InfoItem from './InfoItem';
-import { IBeer } from '../interfaces';
+import { IBeer, IUser } from '../interfaces';
 import { CONTENT_WIDTH } from '../constants';
 
 interface IProps {
   roomCode: string;
+  beerCount: number;
   currentBeer: IBeer;
-  currentUserId: string;
+  currentUser: IUser;
   currentRating: number | null;
   activeBeerIndex: number | null;
   selectedBeerIndex: number;
@@ -30,6 +31,13 @@ interface RatingNumberFormatProps {
 }
 
 const useStyles = makeStyles((theme) => ({
+  statusItem: {
+    padding: '4px 8px',
+    backgroundColor: theme.palette.grey[300],
+    borderRadius: theme.shape.borderRadius,
+    marginBottom: theme.spacing(2),
+    marginLeft: theme.spacing(1),
+  },
   input: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
@@ -45,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
 
 const BeerRating: React.FC<IProps> = ({
   roomCode,
+  beerCount,
   currentBeer,
-  currentUserId,
+  currentUser,
   currentRating,
   activeBeerIndex,
   selectedBeerIndex,
@@ -66,14 +75,8 @@ const BeerRating: React.FC<IProps> = ({
 
   return (
     <React.Fragment>
-      <Typography
-        variant="caption"
-        color="primary"
-        style={{ textTransform: 'uppercase' }}
-      >
-        Nr {currentBeer.index + 1}
-      </Typography>
-      <Typography variant="h2" gutterBottom>
+      {renderStatus()}
+      <Typography variant="h2" style={{ marginBottom: theme.spacing(3) }}>
         {currentBeer.name}
       </Typography>
       <InfoItem label="Tegund" text={currentBeer.type} />
@@ -104,12 +107,33 @@ const BeerRating: React.FC<IProps> = ({
     </React.Fragment>
   );
 
+  function renderStatus() {
+    return (
+      <Grid container direction="row" justify="flex-end">
+        <Typography
+          variant="caption"
+          className={classes.statusItem}
+          style={{ backgroundColor: theme.palette.secondary.light }}
+        >
+          {currentBeer.index + 1} / {beerCount.toString()}
+        </Typography>
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          className={classes.statusItem}
+        >
+          {currentUser.name}
+        </Typography>
+      </Grid>
+    );
+  }
+
   function renderForm() {
     return (
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          updateBeerRating(currentUserId, currentBeer.id);
+          updateBeerRating(currentUser.id, currentBeer.id);
         }}
       >
         <Grid container direction="column">

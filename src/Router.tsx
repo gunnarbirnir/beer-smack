@@ -5,6 +5,7 @@ import IndexPage from './pages/IndexPage';
 import RatingPage from './pages/RatingPage';
 import StatusPage from './pages/StatusPage';
 import AdminPage from './pages/AdminPage';
+import UserPage from './pages/UserPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const Router: React.FC = () => {
@@ -15,6 +16,7 @@ const Router: React.FC = () => {
         <Route exact path="/:code" component={RatingPage} />
         <Route exact path="/:code/status" component={StatusPage} />
         <Route exact path="/:code/admin" component={AdminPage} />
+        <Route exact path="/:code/users" component={UserPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

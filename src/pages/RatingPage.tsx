@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import qs from 'qs';
 
 import useRoom from '../hooks/useRoom';
 import Layout from '../components/Layout';
@@ -10,6 +11,7 @@ import BeerRating from '../components/BeerRating';
 
 const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   match,
+  location,
 }) => {
   const { room, loading, beers, users, activeBeerIndex } = useRoom(
     match.params.code
@@ -20,11 +22,14 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   const activeBeer = activeBeerIndex !== null ? beers[selectedBeerIndex] : null;
 
   useEffect(() => {
-    const savedUserId = localStorage.getItem('userId');
-    if (savedUserId) {
-      setCurrentUserId(savedUserId);
+    const userId = qs
+      .parse(location.search, { ignoreQueryPrefix: true })
+      .user?.toString();
+
+    if (userId) {
+      setCurrentUserId(userId);
     }
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     if (activeBeerIndex !== null) {
@@ -77,8 +82,9 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     return (
       <BeerRating
         roomCode={match.params.code}
+        beerCount={beers.length}
         currentBeer={activeBeer}
-        currentUserId={currentUser.id}
+        currentUser={currentUser}
         currentRating={
           currentUser.ratings &&
           currentUser.ratings[activeBeer.id] !== undefined

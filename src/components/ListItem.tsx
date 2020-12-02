@@ -8,6 +8,7 @@ interface IProps {
   highlighted?: boolean;
   padding?: boolean;
   large?: boolean;
+  onClick?: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +23,17 @@ const useStyles = makeStyles((theme) => ({
   largeText: {
     fontSize: 25,
   },
+  clickable: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: theme.palette.grey[300],
+    },
+  },
+  highlightedClickable: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+    },
+  },
 }));
 
 const ListItem: React.FC<IProps> = ({
@@ -30,6 +42,7 @@ const ListItem: React.FC<IProps> = ({
   highlighted = false,
   padding = true,
   large = false,
+  onClick,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -38,8 +51,11 @@ const ListItem: React.FC<IProps> = ({
     <div
       className={cx(classes.listItem, {
         [classes.highlighted]: highlighted,
+        [classes.clickable]: !!onClick,
+        [classes.highlightedClickable]: !!onClick && highlighted,
       })}
       style={{ marginTop: padding ? theme.spacing(2) : 0 }}
+      onClick={onClick}
     >
       <Grid container direction="row" justify="space-between">
         <Typography
