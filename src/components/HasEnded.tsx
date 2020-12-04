@@ -41,6 +41,7 @@ const HasEnded: React.FC<IProps> = ({ roomTitle, userRatings, roomBeers }) => {
           <Typography color="textSecondary">Þínar einkunnir:</Typography>
           <div className={classes.ratingList}>
             {Object.keys(userRatings)
+              .filter((beerId) => roomBeers[beerId].active)
               .sort((a, b) => userRatings[b] - userRatings[a])
               .map((beerId, index) => (
                 <ListItem
