@@ -41,7 +41,7 @@ if (atvrId) {
         country,
         description,
       };
-      fs.writeFileSync('beers.json', JSON.stringify(beers));
+      fs.writeFileSync(FILE_PATH, JSON.stringify(beers));
     })
     .catch((err) => {
       console.log(err);

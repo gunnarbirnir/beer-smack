@@ -1,0 +1,68 @@
+{
+  "R2GzEhjxM": {
+    "id": "R2GzEhjxM",
+    "name": "Lagunitas Holiday Ale",
+    "type": "Strong ale",
+    "index": 0,
+    "active": true,
+    "abv": 7.7,
+    "brewer": "Lagunitas Brewing Company",
+    "country": "USA",
+    "description": "Nyanserad, humlearomatisk smak med tydlig beska och liten sötma, inslag av passionsfrukt, honung, apelsinskal, tallbarr och aprikos."
+  },
+  "FT9ltdemH": {
+    "id": "FT9ltdemH",
+    "name": "Golden Naked Christmas Ale",
+    "type": "Strong ale",
+    "index": 3,
+    "active": true,
+    "abv": 7.5,
+    "brewer": "Carlsberg Danmark",
+    "country": "Danmark",
+    "description": "Fruktig, nyanserad smak med sötma, inslag av aprikosmarmelad, ljus sirap, vörtbröd, kryddor och nötter."
+  },
+  "aoLUyGSJO": {
+    "id": "aoLUyGSJO",
+    "name": "Lump of Coal Dark Holiday",
+    "type": "Stout",
+    "index": 2,
+    "active": true,
+    "abv": 7.5,
+    "brewer": "Ridgeway Brewing",
+    "country": "Storbritannien",
+    "description": "Maltig, rostad smak med tydlig beska, inslag av kavring, katrinplommon, tobak, mörk sirap, kryddor choklad och peppar."
+  },
+  "4tGYrJS82": {
+    "id": "4tGYrJS82",
+    "name": "Omnipollo Levon",
+    "type": "Belgian Pale Ale",
+    "index": 1,
+    "active": true,
+    "abv": 6.5,
+    "brewer": "Omnipollo",
+    "country": "Belgien",
+    "description": "Nyanserad, humlearomatisk smak med inslag av apelsin, passionsfrukt, aprikos, grapefrukt, honung och örter."
+  },
+  "xK-6E2TQd": {
+    "id": "xK-6E2TQd",
+    "name": "Sitting Bulldog",
+    "type": "IPA",
+    "index": 4,
+    "active": true,
+    "abv": 6.4,
+    "brewer": "Gotlands Bryggeri",
+    "country": "Sverige",
+    "description": "Humlearomatisk smak med tydlig beska, inslag av apelsinskal, honung, örter och smörkola."
+  },
+  "sM6XenXrD": {
+    "id": "sM6XenXrD",
+    "name": "Saison d'Etre",
+    "type": "Saison",
+    "index": 5,
+    "active": true,
+    "abv": 5,
+    "brewer": "STHLM Brewing Co.",
+    "country": "Sverige",
+    "description": "Maltig, något kryddig smak med inslag av ljust bröd, aprikos, kryddnejlika, honung, halm och citrus."
+  }
+}
