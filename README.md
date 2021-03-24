@@ -1,1 +1,3 @@
 # BeerSmack
+
+Beer tasting app
