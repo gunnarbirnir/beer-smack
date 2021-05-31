@@ -108,7 +108,9 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     return (
       <React.Fragment>
         <Typography variant="h2" gutterBottom>
-          {activeBeer.name}
+          {room.isBlind
+            ? `${activeBeer.index + 1}. ${activeBeer.name}`
+            : activeBeer.name}
         </Typography>
         {renderNextPrevButtons()}
         <div className={classes.beerList}>
