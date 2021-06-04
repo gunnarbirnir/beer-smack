@@ -76,6 +76,7 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
           roomTitle={room.title}
           userRatings={currentUser.ratings}
           roomBeers={room && room.beers ? room.beers : null}
+          blindIndex={room.blindIndex}
         />
       );
     }

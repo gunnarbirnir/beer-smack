@@ -10,6 +10,9 @@
         "finished": {
           ".write": true
         },
+        "blindIndex": {
+          ".write": true
+        },
         "users": {
           ".write": true,
           "$user_id": {

@@ -158,9 +158,39 @@ const AdminPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     );
   }
 
+  function getBlindIndex() {
+    const indexes = beers.map((_, index) => index);
+    const blindIndex: { [id: string]: number } = {};
+
+    beers.forEach((beer) => {
+      const nextIndex = Math.floor(Math.random() * indexes.length);
+      blindIndex[beer.id] = indexes.splice(nextIndex, 1)[0];
+    });
+
+    return blindIndex;
+  }
+
   function startStopTasting(start: boolean) {
     setLoadingStateChange(true);
 
+    if (room?.isBlind && start) {
+      firebase
+        .database()
+        .ref(`rooms/${match.params.code}/blindIndex`)
+        .set(getBlindIndex())
+        .then(() => {
+          setStartStop(start);
+        })
+        .catch(() => {
+          setLoadingStateChange(false);
+          setStateChangeError('Villa kom upp');
+        });
+    } else {
+      setStartStop(start);
+    }
+  }
+
+  function setStartStop(start: boolean) {
     firebase
       .database()
       .ref(`rooms/${match.params.code}/hasStarted`)

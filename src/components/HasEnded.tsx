@@ -10,6 +10,7 @@ interface IProps {
   roomTitle: string;
   userRatings?: IRating;
   roomBeers: { [id: string]: IBeer } | null;
+  blindIndex?: { [beerId: string]: number };
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +27,7 @@ const HasEnded: React.FC<IProps> = ({
   roomTitle,
   userRatings,
   roomBeers,
+  blindIndex = {},
 }) => {
   const classes = useStyles();
 
@@ -54,7 +56,7 @@ const HasEnded: React.FC<IProps> = ({
                   key={beerId}
                   highlighted={index === 0}
                   mainText={`${index + 1}. ${roomBeers[beerId].name} ${
-                    isBlind ? `(${roomBeers[beerId].index + 1})` : ''
+                    isBlind ? `(${blindIndex[beerId] + 1})` : ''
                   }`}
                   secondaryText={userRatings[beerId].toFixed(1)}
                 />

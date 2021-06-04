@@ -1,6 +1,6 @@
 {
-  "Y9u8ADsJk": {
-    "id": "Y9u8ADsJk",
+  "cfZ7046b4": {
+    "id": "cfZ7046b4",
     "name": "Egils Gull",
     "type": "Helles",
     "index": 0,
@@ -10,8 +10,8 @@
     "country": "Ísland",
     "description": "Gullinn. Ósætur, létt meðalfylltur, lítil beiskja. Malt, korn, grösugir humlar."
   },
-  "RX1R8cd6Q": {
-    "id": "RX1R8cd6Q",
+  "Fr1hbgv1e": {
+    "id": "Fr1hbgv1e",
     "name": "Víking Gylltur",
     "type": "Export lager",
     "index": 1,
@@ -21,8 +21,8 @@
     "country": "Ísland",
     "description": "Ljósgullinn. Ósætur, meðalfylltur, lítil beiskja. Korn, léttir humlar."
   },
-  "5_HCe-qH_": {
-    "id": "5_HCe-qH_",
+  "jPuawlNNf": {
+    "id": "jPuawlNNf",
     "name": "Bríó",
     "type": "Pilsner",
     "index": 2,
@@ -32,30 +32,30 @@
     "country": "Ísland",
     "description": "Ljósgullinn. Ósætur, meðalfylltur, miðlungsbeiskja. Korn, humlar. "
   },
-  "KFXYOkag2": {
-    "id": "KFXYOkag2",
-    "name": "Kaldi",
-    "type": "Pilsner",
-    "index": 3,
-    "active": true,
-    "abv": 5,
-    "brewer": "Bruggsmiðjan Kaldi ehf.",
-    "country": "Ísland",
-    "description": "Ljósrafgullinn. Ósætur, léttur, lítil beiskja. Korn, léttristað malt, hey."
-  },
-  "gxakWE1ZX": {
-    "id": "gxakWE1ZX",
+  "vYaukj_CM": {
+    "id": "vYaukj_CM",
     "name": "Boli",
     "type": "Export lager",
-    "index": 4,
+    "index": 3,
     "active": true,
     "abv": 5.6,
     "brewer": "Ölgerðin Egill Skallagrímsson",
     "country": "Ísland",
     "description": "Gullinn. Ósætur, mjúk meðalfylling, lítil beiskja. Malt, humlar."
   },
-  "g7P12bThC": {
-    "id": "g7P12bThC",
+  "WwepByCLB": {
+    "id": "WwepByCLB",
+    "name": "Kaldi",
+    "type": "Pilsner",
+    "index": 4,
+    "active": true,
+    "abv": 5,
+    "brewer": "Bruggsmiðjan Kaldi ehf.",
+    "country": "Ísland",
+    "description": "Ljósrafgullinn. Ósætur, léttur, lítil beiskja. Korn, léttristað malt, hey."
+  },
+  "-jLtOHMaY": {
+    "id": "-jLtOHMaY",
     "name": "Víking Lager",
     "type": "Standard Lager",
     "index": 5,
@@ -65,26 +65,26 @@
     "country": "Ísland",
     "description": "Gullinn. Ósætur, léttur, lítil beiskja. Maltaðir korntónar, hey."
   },
-  "B3C6RO4Q1": {
-    "id": "B3C6RO4Q1",
-    "name": "Thule",
-    "type": "Premium Lager",
+  "N_5Hezxcn": {
+    "id": "N_5Hezxcn",
+    "name": "Foli",
+    "type": "Léttur lager",
     "index": 6,
     "active": true,
-    "abv": 5,
-    "brewer": "Víking Brugghús",
+    "abv": 4.2,
+    "brewer": "Gæðingur-Öl ehf",
     "country": "Ísland",
-    "description": "Ljósgullinn. Ósætur, létt meðalfylling, lítil beiskja. Korn, léttur humlakeimur."
+    "description": "Ljósgullinn. Ósætur, léttur, lítil beiskja. Léttir korntónar."
   },
-  "9RSWOHg0g": {
-    "id": "9RSWOHg0g",
-    "name": "Hundur",
+  "RNrNbTa3U": {
+    "id": "RNrNbTa3U",
+    "name": "Sjarmör",
     "type": "Standard Lager",
     "index": 7,
     "active": true,
-    "abv": 5,
-    "brewer": "Víking Brugghús",
+    "abv": 4.6,
+    "brewer": "Segull 67 brugghús",
     "country": "Ísland",
-    "description": "Ljósgullinn, óskír. Ósætur, léttur, ferskur, miðlungsbeiskja. Korn, sítrus, blóm, grösugir humlar."
+    "description": "Ljósgullinn, skýjaður. Ósætur, léttur, lítil beiskja. Léttir korntónar."
   }
 }

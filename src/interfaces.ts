@@ -6,6 +6,7 @@ export interface IRoom {
   users?: { [id: string]: IUser };
   beers?: { [id: string]: IBeer };
   finished?: { [beerId: string]: boolean };
+  blindIndex?: { [beerId: string]: number };
 }
 
 export interface IUser {
