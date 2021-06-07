@@ -11,6 +11,7 @@ function useRoom(roomCode: string) {
     room && room.beers
       ? Object.values(room.beers)
           .filter((b) => b.active)
+          .map((b) => setBeerIndex(b, room))
           .sort(sortBeers)
       : [];
   const users: IUser[] =
@@ -35,6 +36,13 @@ function useRoom(roomCode: string) {
   }, [roomCode]);
 
   return { room, loading, beers, users, activeBeerIndex, beerRatings };
+}
+
+function setBeerIndex(beer: IBeer, room: IRoom) {
+  if (room.isBlind && room.blindIndex) {
+    return { ...beer, index: room.blindIndex[beer.id] };
+  }
+  return beer;
 }
 
 function sortBeers(a: IBeer, b: IBeer) {

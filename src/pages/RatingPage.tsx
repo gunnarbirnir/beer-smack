@@ -72,15 +72,18 @@ const RatingPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     if (!activeBeer) {
       return (
         <HasEnded
+          isBlind={room.isBlind}
           roomTitle={room.title}
           userRatings={currentUser.ratings}
           roomBeers={room && room.beers ? room.beers : null}
+          blindIndex={room.blindIndex}
         />
       );
     }
 
     return (
       <BeerRating
+        isBlind={room.isBlind}
         roomCode={match.params.code}
         beerCount={beers.length}
         currentBeer={activeBeer}

@@ -15,6 +15,7 @@ import { IBeer, IUser } from '../interfaces';
 import { CONTENT_WIDTH } from '../constants';
 
 interface IProps {
+  isBlind: boolean;
   roomCode: string;
   beerCount: number;
   currentBeer: IBeer;
@@ -38,10 +39,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(1),
   },
-  input: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-  },
   error: {
     color: theme.palette.error.main,
     marginTop: theme.spacing(1),
@@ -52,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BeerRating: React.FC<IProps> = ({
+  isBlind,
   roomCode,
   beerCount,
   currentBeer,
@@ -84,13 +82,20 @@ const BeerRating: React.FC<IProps> = ({
         Nr {currentBeer.index + 1}
       </Typography> */}
       <Typography variant="h2" style={{ marginBottom: theme.spacing(3) }}>
-        {currentBeer.name}
+        {isBlind ? `Bjór ${currentBeer.index + 1}` : currentBeer.name}
       </Typography>
-      <InfoItem label="Tegund" text={currentBeer.type} />
-      <InfoItem label="Styrkleiki" text={`${currentBeer.abv.toFixed(1)}%`} />
-      <InfoItem label="Framleiðandi" text={currentBeer.brewer} />
-      <InfoItem label="Land" text={currentBeer.country} />
-      <InfoItem label="Lýsing" text={currentBeer.description} />
+      {!isBlind && (
+        <>
+          <InfoItem label="Tegund" text={currentBeer.type} />
+          <InfoItem
+            label="Styrkleiki"
+            text={`${currentBeer.abv.toFixed(1)}%`}
+          />
+          <InfoItem label="Framleiðandi" text={currentBeer.brewer} />
+          <InfoItem label="Land" text={currentBeer.country} />
+          <InfoItem label="Lýsing" text={currentBeer.description} />
+        </>
+      )}
       {renderForm()}
       {currentRating !== null && (
         <Typography
@@ -146,8 +151,11 @@ const BeerRating: React.FC<IProps> = ({
             variant="outlined"
             label="Einkunn"
             autoFocus
-            style={{ maxWidth: CONTENT_WIDTH / 2 }}
-            className={classes.input}
+            style={{
+              maxWidth: CONTENT_WIDTH / 2,
+              marginTop: !isBlind ? theme.spacing(3) : 0,
+              marginBottom: theme.spacing(2),
+            }}
             disabled={updatingRating}
             onChange={(e) => setRatingInput(e.target.value)}
             InputProps={{

@@ -2,9 +2,11 @@ export interface IRoom {
   code: string;
   title: string;
   hasStarted: boolean;
+  isBlind: boolean;
   users?: { [id: string]: IUser };
   beers?: { [id: string]: IBeer };
   finished?: { [beerId: string]: boolean };
+  blindIndex?: { [beerId: string]: number };
 }
 
 export interface IUser {

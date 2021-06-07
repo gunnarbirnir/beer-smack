@@ -34,6 +34,7 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
     match.params.code
   );
   const activeBeer = activeBeerIndex !== null ? beers[activeBeerIndex] : null;
+  const isBlind = !!room?.isBlind;
 
   return (
     <Layout
@@ -116,7 +117,9 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
                 large
                 padding={false}
                 highlighted={index === 0}
-                mainText={`${index + 1}. ${beer.name}`}
+                mainText={`${index + 1}. ${beer.name} ${
+                  isBlind ? `(Bjór ${beer.index + 1})` : ''
+                }`}
                 secondaryText={
                   beerRatings[beer.id] !== undefined
                     ? beerRatings[beer.id].toFixed(2).toString()
@@ -133,14 +136,19 @@ const StatusPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   function renderBeerView(currentBeer: IBeer) {
     return (
       <React.Fragment>
-        <Typography variant="h1" className={classes.title}>
-          {currentBeer.name}
+        <Typography
+          variant="h1"
+          className={classes.title}
+          style={{ marginBottom: isBlind ? theme.spacing(5) : undefined }}
+        >
+          {isBlind ? `Bjór ${currentBeer.index + 1}` : currentBeer.name}
         </Typography>
-        {renderStatusText([
-          currentBeer.type,
-          `${currentBeer.abv.toFixed(1)}%`,
-          currentBeer.brewer,
-        ])}
+        {!isBlind &&
+          renderStatusText([
+            currentBeer.type,
+            `${currentBeer.abv.toFixed(1)}%`,
+            currentBeer.brewer,
+          ])}
         <Grid container spacing={2}>
           {users.map((user) => (
             <Grid key={user.id} item xs={12} sm={6}>
