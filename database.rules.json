@@ -1,20 +1,10 @@
 {
   "rules": {
     ".read": true,
-    ".write": false,
+    ".write": true,
     "rooms": {
       "$room_id": {
-        "hasStarted": {
-          ".write": true
-        },
-        "finished": {
-          ".write": true
-        },
-        "blindIndex": {
-          ".write": true
-        },
         "users": {
-          ".write": true,
           "$user_id": {
             "ratings": {
               "$beer_id": {

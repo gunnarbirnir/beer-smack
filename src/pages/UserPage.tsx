@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Typography,
-  useTheme,
-  Snackbar,
-  SnackbarCloseReason,
-} from '@material-ui/core';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { Typography, useTheme } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
 
 import useRoom from '../hooks/useRoom';
 import Layout from '../components/Layout';
 import ListItem from '../components/ListItem';
+import Alert from '../components/Alert';
 import { IUser } from '../interfaces';
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const UserPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   match,
@@ -27,17 +18,12 @@ const UserPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   return (
     <Layout loading={loading} error={!room ? 'Room not found' : undefined}>
       {renderContent()}
-      <Snackbar
+      <Alert
         open={notifierOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseNotifier}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        style={{ marginBottom: theme.spacing(3) }}
-      >
-        <Alert onClose={handleCloseNotifier} severity="success">
-          Slóð afrituð
-        </Alert>
-      </Snackbar>
+        message="Slóð afrituð"
+        onClose={() => setNotifierOpen(false)}
+        severity="success"
+      />
     </Layout>
   );
 
@@ -75,17 +61,6 @@ const UserPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       window.location.href.replace('/users', `?user=${user.id}`)
     );
     setNotifierOpen(true);
-  }
-
-  function handleCloseNotifier(
-    event: React.SyntheticEvent<any, Event>,
-    reason?: SnackbarCloseReason
-  ) {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setNotifierOpen(false);
   }
 };
 
