@@ -11,10 +11,14 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 
 import FieldError from './FieldError';
+import { IRoom } from '../interfaces';
 
 interface IProps {
+  room: IRoom | null;
+  editing: boolean;
   codeExistsError: boolean;
-  createRoom: (values: IValues) => void;
+  createRoom: (values: IValues) => Promise<void>;
+  updateRoom: (values: IValues) => Promise<void>;
 }
 
 export interface IValues {
@@ -38,19 +42,26 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 }));
 
-const RoomForm: React.FC<IProps> = ({ codeExistsError, createRoom }) => {
+const RoomForm: React.FC<IProps> = ({
+  room,
+  editing,
+  codeExistsError,
+  createRoom,
+  updateRoom,
+}) => {
   const classes = useStyles();
 
   return (
     <Formik
-      onSubmit={createRoom}
+      onSubmit={editing ? updateRoom : createRoom}
       initialValues={getInitialValues()}
       validationSchema={schema}
       validateOnChange
+      enableReinitialize
     >
       {({
         values,
@@ -76,8 +87,9 @@ const RoomForm: React.FC<IProps> = ({ codeExistsError, createRoom }) => {
                   id="code"
                   variant="outlined"
                   label="Kóði"
+                  autoComplete="off"
                   value={values.code}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || editing}
                   error={(hasSubmitted && !!errors.code) || codeExistsError}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -96,6 +108,7 @@ const RoomForm: React.FC<IProps> = ({ codeExistsError, createRoom }) => {
                   id="title"
                   variant="outlined"
                   label="Titill"
+                  autoComplete="off"
                   value={values.title}
                   disabled={isSubmitting}
                   error={hasSubmitted && !!errors.title}
@@ -122,7 +135,7 @@ const RoomForm: React.FC<IProps> = ({ codeExistsError, createRoom }) => {
                     isSubmitting || !dirty || (hasSubmitted && !isValid)
                   }
                 >
-                  Vista
+                  {editing ? 'Vista' : 'Búa til smökkun'}
                 </Button>
               </Grid>
             </Grid>
@@ -133,7 +146,9 @@ const RoomForm: React.FC<IProps> = ({ codeExistsError, createRoom }) => {
   );
 
   function getInitialValues() {
-    return { code: '', title: '', isBlind: false };
+    return room
+      ? { code: room.code, title: room.title, isBlind: room.isBlind }
+      : { code: '', title: '', isBlind: false };
   }
 };
 

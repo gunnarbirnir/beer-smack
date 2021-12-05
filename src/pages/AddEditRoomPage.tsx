@@ -1,24 +1,37 @@
 import React, { useState } from 'react';
 import { useTheme, Typography } from '@material-ui/core';
 import firebase from 'firebase/app';
-import { useHistory } from 'react-router-dom';
+import { useHistory, RouteComponentProps } from 'react-router-dom';
 
 import Layout from '../components/Layout';
 import RoomForm, { IValues } from '../components/RoomForm';
 import Alert from '../components/Alert';
+import useRoom from '../hooks/useRoom';
 
-const AddEditRoomPage: React.FC = () => {
+const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
+  match,
+}) => {
   const theme = useTheme();
   const history = useHistory();
+  const { room } = useRoom(match.params.code);
 
   const [notifierError, setNotifierError] = useState('');
   const [codeExistsError, setCodeExistsError] = useState(false);
 
+  const editing = !!match.params.code;
+  const loading = editing && !room;
+
   return (
-    <Layout>
-      <Typography variant="h2">Ný smökkun</Typography>
+    <Layout loading={loading}>
+      <Typography variant="h2">{room ? room.title : 'Ný smökkun'}</Typography>
       <div style={{ marginTop: theme.spacing(4) }}>
-        <RoomForm codeExistsError={codeExistsError} createRoom={createRoom} />
+        <RoomForm
+          room={room}
+          editing={editing}
+          codeExistsError={codeExistsError}
+          createRoom={createRoom}
+          updateRoom={updateRoom}
+        />
       </div>
       <Alert
         open={!!notifierError}
@@ -29,51 +42,46 @@ const AddEditRoomPage: React.FC = () => {
     </Layout>
   );
 
-  function createRoom(values: IValues) {
+  // TODO: Move all firebase calls to service
+  async function createRoom(values: IValues) {
     setNotifierError('');
     setCodeExistsError(false);
 
-    return new Promise((resolve) => {
-      firebase
-        .database()
-        .ref(`rooms/${values.code}`)
-        .once('value', async (snapshot) => {
-          if (snapshot.exists()) {
-            setCodeExistsError(true);
-            resolve(null);
-          } else {
-            await updateRoom(values);
-            history.push(`/${values.code}/admin`);
-          }
-        })
-        .catch(() => {
-          setNotifierError('Villa kom upp');
-          resolve(null);
-        });
-    });
+    await firebase
+      .database()
+      .ref(`rooms/${values.code}`)
+      .once('value', async (snapshot) => {
+        if (snapshot.exists()) {
+          setCodeExistsError(true);
+        } else {
+          await updateRoom(values);
+          history.push(`/${values.code}/edit`);
+        }
+      })
+      .catch(() => {
+        setNotifierError('Villa kom upp');
+      });
   }
 
-  function updateRoom(values: IValues) {
+  async function updateRoom(values: IValues) {
     setNotifierError('');
+    const timestamp = Date.now();
 
-    return new Promise((resolve) => {
-      firebase
-        .database()
-        .ref(`rooms/${values.code}`)
-        .set({
-          code: values.code,
-          title: values.title,
-          isBlind: values.isBlind,
-          hasStarted: false,
-        })
-        .then(() => {
-          resolve(null);
-        })
-        .catch(() => {
-          setNotifierError('Villa kom upp');
-          resolve(null);
-        });
-    });
+    await firebase
+      .database()
+      .ref(`rooms/${values.code}`)
+      .set({
+        hasStarted: false,
+        created: timestamp,
+        code: values.code,
+        ...(room || {}),
+        title: values.title,
+        isBlind: values.isBlind,
+        lastUpdate: timestamp,
+      })
+      .catch(() => {
+        setNotifierError('Villa kom upp');
+      });
   }
 };
 

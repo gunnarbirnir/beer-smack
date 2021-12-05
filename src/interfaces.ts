@@ -3,6 +3,8 @@ export interface IRoom {
   title: string;
   hasStarted: boolean;
   isBlind: boolean;
+  created?: number;
+  lastUpdate?: number;
   users?: { [id: string]: IUser };
   beers?: { [id: string]: IBeer };
   finished?: { [beerId: string]: boolean };
