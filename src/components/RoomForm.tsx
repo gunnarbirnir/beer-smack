@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  makeStyles,
   Grid,
   TextField,
   FormControlLabel,
@@ -37,15 +36,6 @@ const schema = yup.object().shape({
   isBlind: yup.boolean().required(),
 });
 
-const useStyles = makeStyles((theme) => ({
-  submitContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-}));
-
 const RoomForm: React.FC<IProps> = ({
   room,
   editing,
@@ -53,8 +43,6 @@ const RoomForm: React.FC<IProps> = ({
   createRoom,
   updateRoom,
 }) => {
-  const classes = useStyles();
-
   return (
     <Formik
       onSubmit={editing ? updateRoom : createRoom}
@@ -116,7 +104,14 @@ const RoomForm: React.FC<IProps> = ({
                   onBlur={handleBlur}
                 />
               </Grid>
-              <Grid item xs={12} className={classes.submitContainer}>
+              <Grid
+                item
+                xs={12}
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+                style={{ display: 'flex' }}
+              >
                 <FormControlLabel
                   label="Blind smökkun"
                   control={
