@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import {
-  makeStyles,
-  Grid,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Typography,
-} from '@material-ui/core';
-import { Formik, Form } from 'formik';
-import * as yup from 'yup';
+import { Grid, Button, Typography, useTheme } from '@material-ui/core';
 
-import FieldError from './FieldError';
-import { IRoom, IBeer } from '../interfaces';
-import ListItem from './ListItem';
+import { IBeer } from '../interfaces';
+import ActionItem from './ActionItem';
+import EditBeerModal, { IValues } from './EditBeerModal';
 
 interface IProps {
   beers: IBeer[];
@@ -21,86 +11,79 @@ interface IProps {
   updateBeer: (values: IValues, id: string) => Promise<void>;
 }
 
-export interface IValues {
-  name: string;
-  index: number;
-  type: string;
-  abv: number;
-  active: boolean;
-  brewer: string;
-  country: string;
-  description: string;
-}
-
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  index: yup.number().required(),
-  type: yup.string().required(),
-  abv: yup.number().required(),
-  active: yup.boolean().required(),
-  brewer: yup.string().required(),
-  country: yup.string().required(),
-  description: yup.string().required(),
-});
-
-const useStyles = makeStyles((theme) => ({}));
-
 const EditBeers: React.FC<IProps> = ({ beers, createBeer, updateBeer }) => {
-  const classes = useStyles();
-
-  const [addBeerOpen, setAddBeerOpen] = useState(false);
+  const theme = useTheme();
+  const [addBeer, setAddBeer] = useState(false);
   const [editBeerId, setEditBeerId] = useState('');
+  const [deleteBeerId, setDeleteBeerId] = useState('');
 
   return (
-    <Grid container spacing={2}>
-      <Grid
-        item
-        xs={12}
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-        style={{ display: 'flex' }}
-      >
-        <Typography variant="h3">Bjórar</Typography>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => setAddBeerOpen(true)}
+    <>
+      <Grid container spacing={3}>
+        <Grid
+          item
+          xs={12}
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          style={{ display: 'flex' }}
         >
-          Bæta við
-        </Button>
-      </Grid>
+          <Typography variant="h3">Bjórar</Typography>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => setAddBeer(true)}
+          >
+            Bæta við
+          </Button>
+        </Grid>
 
-      <Grid item xs={12}>
-        {beers.length ? (
-          beers.map((beer) => (
-            // TODO: Create new component
-            <ListItem
-              key={beer.id}
-              mainText={beer.name}
-              onClick={() => setEditBeerId(beer.id)}
-            />
-          ))
-        ) : (
-          <Typography variant="body1" color="textSecondary">
-            Engir bjórar skráðir
-          </Typography>
+        <Grid item xs={12}>
+          {beers.length ? (
+            beers.map((beer, index) => (
+              <ActionItem
+                key={beer.id}
+                padding={index > 0}
+                buttons={getActionButtons(beer)}
+              >
+                {beer.name}
+              </ActionItem>
+            ))
+          ) : (
+            <Typography variant="body1" color="textSecondary">
+              Engir bjórar skráðir
+            </Typography>
+          )}
+        </Grid>
+
+        {beers.length > 1 && (
+          <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => console.log('Uppröðun')}
+              style={{ marginTop: theme.spacing(1) }}
+            >
+              Vista uppröðun
+            </Button>
+          </Grid>
         )}
       </Grid>
-    </Grid>
+      <EditBeerModal open={addBeer} />
+    </>
   );
 
-  function getInitialValues() {
-    return {
-      name: 'Test Bjór',
-      index: 0,
-      type: 'IPA',
-      abv: 5,
-      active: true,
-      brewer: 'Borg',
-      country: 'Ísland',
-      description: 'Góður bjór',
-    };
+  function getActionButtons(beer: IBeer) {
+    return [
+      {
+        label: 'Breyta',
+        onClick: () => setEditBeerId(beer.id),
+      },
+      {
+        label: 'Eyða',
+        onClick: () => setDeleteBeerId(beer.id),
+      },
+    ];
   }
 };
 

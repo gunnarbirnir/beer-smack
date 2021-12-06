@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Typography, Grid, useTheme } from '@material-ui/core';
+import { Typography, useTheme } from '@material-ui/core';
 import firebase from 'firebase/app';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 
 import Layout from '../components/Layout';
 import RoomForm, { IValues as IRoomValues } from '../components/RoomForm';
-import EditBeers, { IValues as IBeerValues } from '../components/EditBeers';
+import EditBeers from '../components/EditBeers';
+import { IValues as IBeerValues } from '../components/EditBeerModal';
 import Alert from '../components/Alert';
 import useRoom from '../hooks/useRoom';
 

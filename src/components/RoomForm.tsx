@@ -130,7 +130,7 @@ const RoomForm: React.FC<IProps> = ({
                     isSubmitting || !dirty || (hasSubmitted && !isValid)
                   }
                 >
-                  {editing ? 'Vista' : 'Búa til smökkun'}
+                  {editing ? 'Vista stillingar' : 'Búa til smökkun'}
                 </Button>
               </Grid>
             </Grid>
