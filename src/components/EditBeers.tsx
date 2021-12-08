@@ -3,12 +3,13 @@ import { Grid, Button, Typography, useTheme } from '@material-ui/core';
 
 import { IBeer } from '../interfaces';
 import ActionItem from './ActionItem';
-import EditBeerModal, { IValues } from './EditBeerModal';
+import EditBeerModal from './EditBeerModal';
+import { IBeerValues } from '../interfaces/forms';
 
 interface IProps {
   beers: IBeer[];
-  createBeer: (values: IValues) => Promise<void>;
-  updateBeer: (values: IValues, id: string) => Promise<void>;
+  createBeer: (values: IBeerValues) => Promise<void>;
+  updateBeer: (values: IBeerValues, id: string) => Promise<void>;
 }
 
 const EditBeers: React.FC<IProps> = ({ beers, createBeer, updateBeer }) => {
@@ -55,19 +56,6 @@ const EditBeers: React.FC<IProps> = ({ beers, createBeer, updateBeer }) => {
             </Typography>
           )}
         </Grid>
-
-        {beers.length > 1 && (
-          <Grid item xs={12} style={{ textAlign: 'right' }}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => console.log('Uppröðun')}
-              style={{ marginTop: theme.spacing(1) }}
-            >
-              Vista uppröðun
-            </Button>
-          </Grid>
-        )}
       </Grid>
       <EditBeerModal open={addBeer} />
     </>

@@ -6,17 +6,6 @@ interface IProps {
   open: boolean;
 }
 
-export interface IValues {
-  name: string;
-  index: number;
-  type: string;
-  abv: number;
-  active: boolean;
-  brewer: string;
-  country: string;
-  description: string;
-}
-
 const schema = yup.object().shape({
   name: yup.string().required(),
   index: yup.number().required(),

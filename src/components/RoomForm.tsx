@@ -6,24 +6,19 @@ import {
   Checkbox,
   Button,
 } from '@material-ui/core';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 
 import FieldError from './FieldError';
 import { IRoom } from '../interfaces';
+import { IRoomValues } from '../interfaces/forms';
 
 interface IProps {
   room: IRoom | null;
   editing: boolean;
   codeExistsError: boolean;
-  createRoom: (values: IValues) => Promise<void>;
-  updateRoom: (values: IValues) => Promise<void>;
-}
-
-export interface IValues {
-  code: string;
-  title: string;
-  isBlind: boolean;
+  createRoom: (values: IRoomValues) => Promise<void>;
+  updateRoom: (values: IRoomValues) => Promise<void>;
 }
 
 const schema = yup.object().shape({

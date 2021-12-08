@@ -4,11 +4,11 @@ import firebase from 'firebase/app';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 
 import Layout from '../components/Layout';
-import RoomForm, { IValues as IRoomValues } from '../components/RoomForm';
+import RoomForm from '../components/RoomForm';
 import EditBeers from '../components/EditBeers';
-import { IValues as IBeerValues } from '../components/EditBeerModal';
 import Alert from '../components/Alert';
 import useRoom from '../hooks/useRoom';
+import { IRoomValues, IBeerValues } from '../interfaces/forms';
 
 const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   match,
@@ -93,6 +93,7 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   }
 
   // TODO: Move all firebase calls to service
+  // TODO: Update database rules
   async function createRoom(values: IRoomValues) {
     resetFeedback();
 
@@ -157,18 +158,34 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
 
   async function updateBeer(values: IBeerValues, beerId: string) {
     resetFeedback();
-    const timestamp = Date.now();
-    const currentBeer =
-      room?.beers && room.beers[beerId] ? room.beers[beerId] : {};
 
     if (room) {
-      await firebase
+      const timestamp = Date.now();
+      const currentBeer =
+        room.beers && room.beers[beerId] ? room.beers[beerId] : null;
+      const beerAtIndex = beers[values.index];
+      let indexPromise;
+
+      if (beerAtIndex && beerAtIndex.id !== beerId) {
+        const currentIndex = currentBeer ? currentBeer.index : beers.length;
+        const indexChange = currentIndex > beerAtIndex.index ? 1 : -1;
+
+        indexPromise = firebase
+          .database()
+          .ref(`rooms/${room.code}/beers/${beerAtIndex.id}`)
+          .set({
+            ...beerAtIndex,
+            index: beerAtIndex.index + indexChange,
+          });
+      }
+
+      const updatePromise = firebase
         .database()
         .ref(`rooms/${room.code}/beers/${beerId}`)
         .set({
           index: values.index,
           created: timestamp,
-          ...currentBeer,
+          ...(currentBeer || {}),
           id: beerId,
           name: values.name,
           type: values.type,
@@ -178,7 +195,9 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
           country: values.country,
           description: values.description,
           lastUpdate: timestamp,
-        })
+        });
+
+      await Promise.all([indexPromise, updatePromise])
         .then(() => {
           setNotifierSuccess('Bjór uppfærður');
         })
