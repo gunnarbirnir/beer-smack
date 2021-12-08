@@ -17,7 +17,10 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   const theme = useTheme();
   const { room, beers } = useRoom(match.params.code);
 
-  const [notifierError, setNotifierError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successNotifierOpen, setSuccessNotifierOpen] = useState(false);
+  const [errorNotifierOpen, setErrorNotifierOpen] = useState(false);
   const [codeExistsError, setCodeExistsError] = useState(false);
 
   const editing = !!match.params.code;
@@ -59,18 +62,39 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
       )}
 
       <Alert
-        open={!!notifierError}
-        message={notifierError}
+        open={successNotifierOpen}
+        message={successMessage}
+        severity="success"
+        onClose={() => setSuccessNotifierOpen(false)}
+      />
+      <Alert
+        open={errorNotifierOpen}
+        message={errorMessage}
         severity="error"
-        onClose={() => setNotifierError('')}
+        onClose={() => setErrorNotifierOpen(false)}
       />
     </Layout>
   );
 
+  function setNotifierSuccess(message: string) {
+    setSuccessMessage(message);
+    setSuccessNotifierOpen(true);
+  }
+
+  function setNotifierError(message: string) {
+    setErrorMessage(message);
+    setErrorNotifierOpen(true);
+  }
+
+  function resetFeedback() {
+    setSuccessNotifierOpen(false);
+    setErrorNotifierOpen(false);
+    setCodeExistsError(false);
+  }
+
   // TODO: Move all firebase calls to service
   async function createRoom(values: IRoomValues) {
-    setNotifierError('');
-    setCodeExistsError(false);
+    resetFeedback();
 
     await firebase
       .database()
@@ -80,6 +104,7 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
           setCodeExistsError(true);
         } else {
           await updateRoom(values);
+          setNotifierSuccess('Smökkun búin til');
           history.push(`/${values.code}/edit`);
         }
       })
@@ -89,7 +114,7 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   }
 
   async function updateRoom(values: IRoomValues) {
-    setNotifierError('');
+    resetFeedback();
     const timestamp = Date.now();
 
     await firebase
@@ -104,13 +129,16 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
         isBlind: values.isBlind,
         lastUpdate: timestamp,
       })
+      .then(() => {
+        setNotifierSuccess('Smökkun uppfærð');
+      })
       .catch(() => {
         setNotifierError('Villa kom upp við að uppfæra smökkun');
       });
   }
 
   async function createBeer(values: IBeerValues) {
-    setNotifierError('');
+    resetFeedback();
 
     if (room) {
       const beerRef = await firebase
@@ -120,6 +148,7 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
 
       if (beerRef.key) {
         await updateBeer(values, beerRef.key);
+        setNotifierSuccess('Bjór bætt við');
       } else {
         setNotifierError('Villa kom upp við að búa til bjór');
       }
@@ -127,7 +156,7 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
   }
 
   async function updateBeer(values: IBeerValues, beerId: string) {
-    setNotifierError('');
+    resetFeedback();
     const timestamp = Date.now();
     const currentBeer =
       room?.beers && room.beers[beerId] ? room.beers[beerId] : {};
@@ -149,6 +178,9 @@ const AddEditRoomPage: React.FC<RouteComponentProps<{ code: string }>> = ({
           country: values.country,
           description: values.description,
           lastUpdate: timestamp,
+        })
+        .then(() => {
+          setNotifierSuccess('Bjór uppfærður');
         })
         .catch(() => {
           setNotifierError('Villa kom upp við að uppfæra bjór');

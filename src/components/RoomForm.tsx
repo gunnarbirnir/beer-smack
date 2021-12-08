@@ -106,11 +106,11 @@ const RoomForm: React.FC<IProps> = ({
               </Grid>
               <Grid
                 item
+                container
                 xs={12}
                 direction="row"
                 justify="space-between"
                 alignItems="center"
-                style={{ display: 'flex' }}
               >
                 <FormControlLabel
                   label="Blind smökkun"

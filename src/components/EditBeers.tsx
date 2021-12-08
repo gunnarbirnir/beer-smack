@@ -22,11 +22,11 @@ const EditBeers: React.FC<IProps> = ({ beers, createBeer, updateBeer }) => {
       <Grid container spacing={3}>
         <Grid
           item
+          container
           xs={12}
           direction="row"
           justify="space-between"
           alignItems="center"
-          style={{ display: 'flex' }}
         >
           <Typography variant="h3">Bjórar</Typography>
           <Button

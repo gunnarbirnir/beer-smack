@@ -1,8 +1,9 @@
 {
   "rules": {
     ".read": true,
-    ".write": true,
+    ".write": false,
     "rooms": {
+      ".write": true,
       "$room_id": {
         "users": {
           "$user_id": {

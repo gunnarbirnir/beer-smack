@@ -6,16 +6,23 @@ interface IProps {
   open: boolean;
   message: string;
   severity: Color;
+  autoHideDuration?: number;
   onClose: () => void;
 }
 
-const Alert: React.FC<IProps> = ({ open, message, severity, onClose }) => {
+const Alert: React.FC<IProps> = ({
+  open,
+  message,
+  severity,
+  autoHideDuration = 3000,
+  onClose,
+}) => {
   const theme = useTheme();
 
   return (
     <Snackbar
       open={open}
-      autoHideDuration={3000}
+      autoHideDuration={autoHideDuration}
       onClose={handleCloseNotifier}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       style={{ marginBottom: theme.spacing(3) }}
