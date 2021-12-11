@@ -28,6 +28,7 @@ export interface IBeer {
   brewer: string;
   country: string;
   description: string;
+  created?: number;
 }
 
 export type IRating = { [beerId: string]: number };

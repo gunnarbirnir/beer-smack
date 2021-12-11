@@ -40,7 +40,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "yarn build && firebase deploy",
-    "add-beer": "node addBeer.js"
+    "add-beer": "node ./scripts/addBeer.js",
+    "clear-beers": "node ./scripts/clearBeers.js",
+    "create-room": "echo 'Not implemented'",
+    "update-room": "echo 'Not implemented'"
   },
   "eslintConfig": {
     "extends": [
