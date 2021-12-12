@@ -57,7 +57,6 @@ function fetchBeerInfo() {
         brewer,
         country,
         description,
-        created: Date.now(),
       };
       writeToFile();
     })
@@ -79,7 +78,6 @@ function createEmptyBeers() {
       brewer: '',
       country: '',
       description: '',
-      created: Date.now(),
     };
   }
   writeToFile();

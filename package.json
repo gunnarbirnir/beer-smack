@@ -42,8 +42,8 @@
     "deploy": "yarn build && firebase deploy",
     "add-beer": "node ./scripts/addBeer.js",
     "clear-beers": "node ./scripts/clearBeers.js",
-    "create-room": "echo 'Not implemented'",
-    "update-room": "echo 'Not implemented'"
+    "create-room": "node ./scripts/createRoom.js",
+    "update-room": "node ./scripts/updateRoom.js"
   },
   "eslintConfig": {
     "extends": [
