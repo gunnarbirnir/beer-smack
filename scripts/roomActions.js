@@ -2,6 +2,8 @@ const firebase = require('firebase/app');
 require('firebase/database');
 require('dotenv').config();
 
+const PAGE_URL = process.env.WEB_PAGE_URL;
+
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -19,49 +21,58 @@ async function createRoom(room) {
     process.exit(1);
   }
 
-  firebase
-    .database()
-    .ref(`rooms/${room.code}`)
-    .once('value', async (snapshot) => {
-      if (snapshot.exists()) {
-        console.log('Room code already exists');
-        process.exit(1);
-      } else {
-        await setRoomValues(room);
-        console.log(`Room ${room.title} created`);
-        process.exit();
-      }
-    })
-    .catch(() => {
-      console.log('Unable to create room');
+  try {
+    const snapshot = await firebase
+      .database()
+      .ref(`rooms/${room.code}`)
+      .once('value');
+
+    if (snapshot.exists()) {
+      console.log('Room code already exists');
       process.exit(1);
-    });
+    } else {
+      await setRoomValues(room);
+      console.log(`Room ${room.title} created`);
+      console.log(`Room URL: ${PAGE_URL}/${room.code}`);
+      console.log(`Admin: ${PAGE_URL}/${room.code}/admin`);
+      console.log(`Status: ${PAGE_URL}/${room.code}/status`);
+      process.exit();
+    }
+  } catch {
+    console.log('Unable to create room');
+    process.exit(1);
+  }
 }
 
-async function updateRoom(room) {
-  firebase
-    .database()
-    .ref(`rooms/${room.code}`)
-    .once('value', async (snapshot) => {
-      if (snapshot.exists()) {
-        const currentRoom = snapshot.val();
-        if (currentRoom.hasStarted) {
-          console.log("Tasting has started so room can't be updated");
-          process.exit(1);
-        } else {
-          await setRoomValues(room, currentRoom);
-          console.log(`Room ${room.title} updated`);
-          process.exit();
-        }
-      } else {
-        console.log('Room not found');
+async function getCurrentRoom(code) {
+  try {
+    const snapshot = await firebase
+      .database()
+      .ref(`rooms/${code}`)
+      .once('value');
+
+    if (snapshot.exists()) {
+      const currentRoom = snapshot.val();
+      if (currentRoom.hasStarted) {
+        console.log("Tasting has started so room can't be updated");
         process.exit(1);
+      } else {
+        return currentRoom;
       }
-    })
-    .catch(() => {
-      console.log('Unable to update room');
+    } else {
+      console.log('Room not found');
       process.exit(1);
-    });
+    }
+  } catch (err) {
+    console.log('Unable fetch current room');
+    process.exit(1);
+  }
+}
+
+async function updateRoom(newRoom, currentRoom) {
+  await setRoomValues(newRoom, currentRoom);
+  console.log(`Room ${newRoom.title} updated`);
+  process.exit();
 }
 
 async function setRoomValues(newRoom, currentRoom = {}) {
@@ -75,38 +86,46 @@ async function setRoomValues(newRoom, currentRoom = {}) {
   validateBeers(newRoom.beers);
 
   Object.keys(newRoom.beers).forEach((id) => {
-    // TODO: compare changes
+    const currentBeer =
+      currentRoom.beers && currentRoom.beers[id] ? currentRoom.beers[id] : {};
+
     newBeers[id] = {
-      created: timestamp,
       index: 0,
       active: true,
+      created: timestamp,
+      ...currentBeer,
       ...newRoom.beers[id],
-      lastUpdate: timestamp,
+      id,
     };
+
+    // TOO: fix
+    if (JSON.stringify(newBeers[id]) !== JSON.stringify(currentBeer)) {
+      newBeers[id].lastUpdate = timestamp;
+    }
   });
 
-  await firebase
-    .database()
-    .ref(`rooms/${newRoom.code}`)
-    .set({
-      created: timestamp,
-      ...currentRoom,
-      code: newRoom.code,
-      title: newRoom.title,
-      isBlind: newRoom.isBlind,
-      lastUpdate: timestamp,
-      hasStarted: false,
-      beers: newBeers,
-    })
-    .catch(() => {
-      console.log('Unable to set room values');
-      process.exit(1);
-    });
+  try {
+    await firebase
+      .database()
+      .ref(`rooms/${newRoom.code}`)
+      .set({
+        created: timestamp,
+        ...currentRoom,
+        code: newRoom.code,
+        title: newRoom.title,
+        isBlind: newRoom.isBlind,
+        lastUpdate: timestamp,
+        hasStarted: false,
+        beers: newBeers,
+      });
+  } catch {
+    console.log('Unable update room');
+    process.exit(1);
+  }
 }
 
 function validateBeers(beers) {
   const requiredFields = [
-    'id',
     'name',
     'type',
     'abv',
@@ -137,4 +156,8 @@ function validateBeers(beers) {
   });
 }
 
-module.exports = { createRoom, updateRoom };
+module.exports = {
+  createRoom,
+  getCurrentRoom,
+  updateRoom,
+};
