@@ -87,6 +87,41 @@ async function updateRoom(newRoom, currentRoom = {}) {
   }
 }
 
+async function downloadBeers(code) {
+  try {
+    const snapshot = await firebase
+      .database()
+      .ref(`rooms/${code}/beers`)
+      .once('value');
+
+    if (snapshot.exists()) {
+      const currentBeers = snapshot.val();
+      const beers = {};
+
+      Object.keys(currentBeers).forEach((id) => {
+        const currentBeer = currentBeers[id];
+        beers[id] = {
+          id: currentBeer.id,
+          name: currentBeer.name,
+          type: currentBeer.type,
+          index: currentBeer.index,
+          active: currentBeer.active,
+          abv: currentBeer.abv,
+          brewer: currentBeer.brewer,
+          country: currentBeer.country,
+          description: currentBeer.description,
+        };
+      });
+
+      return beers;
+    } else {
+      error('Beers not found');
+    }
+  } catch (err) {
+    error('Unable download beers');
+  }
+}
+
 function validateBeers(newBeers, currentBeers = {}, timestamp, isBlind) {
   const validatedBeers = {};
   const requiredFields = [
@@ -173,4 +208,5 @@ module.exports = {
   createRoom,
   getCurrentRoom,
   updateRoom,
+  downloadBeers,
 };
