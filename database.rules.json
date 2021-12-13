@@ -3,19 +3,36 @@
     ".read": true,
     ".write": false,
     "rooms": {
+      ".write": true,
       "$room_id": {
-        "hasStarted": {
-          ".write": true
-        },
-        "finished": {
-          ".write": true
-        },
-        "blindIndex": {
-          ".write": true
+        "code": { ".validate": "newData.isString()" },
+        "title": { ".validate": "newData.isString()" },
+        "hasStarted": { ".validate": "newData.isBoolean()" },
+        "isBlind": { ".validate": "newData.isBoolean()" },
+        "created": { ".validate": "newData.isNumber()" },
+        "lastUpdate": { ".validate": "newData.isNumber()" },
+        "finished": { "$beer_id": { ".validate": "newData.isBoolean()" } },
+        "blindIndex": { "$beer_id": { ".validate": "newData.isNumber()" } },
+        "beers": {
+          "$beer_id": {
+            "id": { ".validate": "newData.isString()" },
+            "index": { ".validate": "newData.isNumber()" },
+            "active": { ".validate": "newData.isBoolean()" },
+            "name": { ".validate": "newData.isString()" },
+            "type": { ".validate": "newData.isString()" },
+            "abv": { ".validate": "newData.isNumber()" },
+            "brewer": { ".validate": "newData.isString()" },
+            "country": { ".validate": "newData.isString()" },
+            "description": { ".validate": "newData.isString()" },
+            "created": { ".validate": "newData.isNumber()" },
+            "lastUpdate": { ".validate": "newData.isNumber()" }
+          }
         },
         "users": {
-          ".write": true,
           "$user_id": {
+            "id": { ".validate": "newData.isString()" },
+            "name": { ".validate": "newData.isString()" },
+            "timestamp": { ".validate": "newData.isNumber()" },
             "ratings": {
               "$beer_id": {
                 ".validate": "newData.isNumber() && newData.val()>=0 && newData.val()<=10"
