@@ -3,6 +3,8 @@ export interface IRoom {
   title: string;
   hasStarted: boolean;
   isBlind: boolean;
+  created?: number;
+  lastUpdate?: number;
   users?: { [id: string]: IUser };
   beers?: { [id: string]: IBeer };
   finished?: { [beerId: string]: boolean };
@@ -26,6 +28,8 @@ export interface IBeer {
   brewer: string;
   country: string;
   description: string;
+  created?: number;
+  lastUpdate?: number;
 }
 
 export type IRating = { [beerId: string]: number };
