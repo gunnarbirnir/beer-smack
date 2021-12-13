@@ -85,6 +85,7 @@ function createEmptyBeers() {
 
 function writeToFile() {
   fs.writeFileSync(FILE_PATH, JSON.stringify(beers, null, 2));
+  console.log(`Beer added to ${FILE_PATH}`);
 }
 
 function isNumeric(value) {

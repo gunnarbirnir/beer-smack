@@ -87,6 +87,36 @@ async function updateRoom(newRoom, currentRoom = {}) {
   }
 }
 
+async function resetRoom(code) {
+  try {
+    const snapshot = await firebase
+      .database()
+      .ref(`rooms/${code}`)
+      .once('value');
+
+    if (snapshot.exists()) {
+      const currentRoom = snapshot.val();
+
+      await firebase
+        .database()
+        .ref(`rooms/${code}`)
+        .set({
+          ...currentRoom,
+          hasStarted: false,
+          users: {},
+          finished: {},
+          blindIndex: {},
+        });
+
+      return currentRoom;
+    } else {
+      error('Room not found');
+    }
+  } catch (err) {
+    error('Unable reset room');
+  }
+}
+
 async function downloadBeers(code) {
   try {
     const snapshot = await firebase
@@ -208,5 +238,6 @@ module.exports = {
   createRoom,
   getCurrentRoom,
   updateRoom,
+  resetRoom,
   downloadBeers,
 };
