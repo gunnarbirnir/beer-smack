@@ -2,8 +2,6 @@ const firebase = require('firebase/app');
 require('firebase/database');
 require('dotenv').config();
 
-const PAGE_URL = process.env.WEB_PAGE_URL;
-
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -17,8 +15,10 @@ firebase.initializeApp({
 async function createRoom(room) {
   const codeRegex = new RegExp(/^[a-zA-Z0-9\-_]+$/);
   if (!room.code.match(codeRegex)) {
-    console.log(`Code ${room.code} not valid (regex: /^[a-zA-Z0-9\-_]+$/)`);
-    process.exit(1);
+    error(`Code ${room.code} not valid (regex: /^[a-zA-Z0-9\-_]+$/)`);
+  }
+  if (!room.title) {
+    error('A title must be provided');
   }
 
   try {
@@ -28,19 +28,12 @@ async function createRoom(room) {
       .once('value');
 
     if (snapshot.exists()) {
-      console.log('Room code already exists');
-      process.exit(1);
+      error('Room code already exists');
     } else {
-      await setRoomValues(room);
-      console.log(`Room ${room.title} created`);
-      console.log(`Room URL: ${PAGE_URL}/${room.code}`);
-      console.log(`Admin: ${PAGE_URL}/${room.code}/admin`);
-      console.log(`Status: ${PAGE_URL}/${room.code}/status`);
-      process.exit();
+      await updateRoom(room);
     }
-  } catch {
-    console.log('Unable to create room');
-    process.exit(1);
+  } catch (err) {
+    error('Unable to create room');
   }
 }
 
@@ -54,55 +47,26 @@ async function getCurrentRoom(code) {
     if (snapshot.exists()) {
       const currentRoom = snapshot.val();
       if (currentRoom.hasStarted) {
-        console.log("Tasting has started so room can't be updated");
-        process.exit(1);
+        error("Tasting has started so room can't be updated");
       } else {
         return currentRoom;
       }
     } else {
-      console.log('Room not found');
-      process.exit(1);
+      error('Room not found');
     }
   } catch (err) {
-    console.log('Unable fetch current room');
-    process.exit(1);
+    error('Unable fetch current room');
   }
 }
 
-async function updateRoom(newRoom, currentRoom) {
-  await setRoomValues(newRoom, currentRoom);
-  console.log(`Room ${newRoom.title} updated`);
-  process.exit();
-}
-
-async function setRoomValues(newRoom, currentRoom = {}) {
+async function updateRoom(newRoom, currentRoom = {}) {
   const timestamp = Date.now();
-  const newBeers = {};
-
-  if (!newRoom.title) {
-    console.log('A title must be provided');
-    process.exit(1);
-  }
-  validateBeers(newRoom.beers);
-
-  Object.keys(newRoom.beers).forEach((id) => {
-    const currentBeer =
-      currentRoom.beers && currentRoom.beers[id] ? currentRoom.beers[id] : {};
-
-    newBeers[id] = {
-      index: 0,
-      active: true,
-      created: timestamp,
-      ...currentBeer,
-      ...newRoom.beers[id],
-      id,
-    };
-
-    // TOO: fix
-    if (JSON.stringify(newBeers[id]) !== JSON.stringify(currentBeer)) {
-      newBeers[id].lastUpdate = timestamp;
-    }
-  });
+  const newBeers = validateBeers(
+    newRoom.beers,
+    currentRoom.beers,
+    timestamp,
+    newRoom.isBlind
+  );
 
   try {
     await firebase
@@ -119,12 +83,12 @@ async function setRoomValues(newRoom, currentRoom = {}) {
         beers: newBeers,
       });
   } catch {
-    console.log('Unable update room');
-    process.exit(1);
+    error('Unable update room');
   }
 }
 
-function validateBeers(beers) {
+function validateBeers(newBeers, currentBeers = {}, timestamp, isBlind) {
+  const validatedBeers = {};
   const requiredFields = [
     'name',
     'type',
@@ -134,7 +98,7 @@ function validateBeers(beers) {
     'description',
   ];
 
-  Object.values(beers).forEach((beer) => {
+  Object.values(newBeers).forEach((beer) => {
     const missing = [];
     requiredFields.forEach((field) => {
       if (!beer[field] && beer[field] !== 0) {
@@ -145,15 +109,64 @@ function validateBeers(beers) {
     if (missing.length) {
       const missingStr = missing.join(', ');
       if (beer.name) {
-        console.log(
-          `The beer ${beer.name} has some missing fields: ${missingStr}`
-        );
+        error(`The beer ${beer.name} has some missing fields: ${missingStr}`);
       } else {
-        console.log(`A beer has some missing fields: ${missingStr}`);
+        error(`A beer has some missing fields: ${missingStr}`);
       }
-      process.exit(1);
     }
   });
+
+  Object.keys(newBeers).forEach((id) => {
+    const currentBeer = currentBeers[id] || {};
+    validatedBeers[id] = {
+      index: 0,
+      active: true,
+      created: timestamp,
+      ...currentBeer,
+      ...newBeers[id],
+      id,
+    };
+
+    if (!compareObjects(validatedBeers[id], currentBeer)) {
+      validatedBeers[id].lastUpdate = timestamp;
+    }
+  });
+
+  if (!isBlind) {
+    const indices = {};
+    Object.values(validatedBeers).forEach((beer) => {
+      if (indices[beer.index]) {
+        error('Beer indices must be unique');
+      }
+      indices[beer.index] = true;
+    });
+  }
+
+  return validatedBeers;
+}
+
+// https://stackoverflow.com/a/5859028
+function compareObjects(o1, o2) {
+  for (const p in o1) {
+    if (o1.hasOwnProperty(p)) {
+      if (o1[p] !== o2[p]) {
+        return false;
+      }
+    }
+  }
+  for (const p in o2) {
+    if (o2.hasOwnProperty(p)) {
+      if (o1[p] !== o2[p]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function error(message) {
+  console.log(message);
+  process.exit(1);
 }
 
 module.exports = {

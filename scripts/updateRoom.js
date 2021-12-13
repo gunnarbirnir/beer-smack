@@ -17,16 +17,20 @@ function getUserInput(currentRoom) {
       rl.question('Beers file (beers.json): ', async function (file) {
         console.log();
         const beers = require(file ? `../${file}` : '../beers.json');
-        roomActions.updateRoom(
+        const newTitle = title || currentRoom.title;
+
+        await roomActions.updateRoom(
           {
             code: currentRoom.code,
-            title: title || currentRoom.title,
-            // TOO: fix
-            isBlind: isBlind === 'y' || currentRoom.isBlind,
+            title: newTitle,
+            isBlind: isBlind ? isBlind === 'y' : currentRoom.isBlind,
             beers,
           },
           currentRoom
         );
+
+        console.log(`Room ${newTitle} updated`);
+        process.exit();
       });
     });
   });
