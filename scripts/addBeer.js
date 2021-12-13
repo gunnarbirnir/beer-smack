@@ -12,7 +12,11 @@ if (EMPTY_BEERS_MODE) {
 
 const ATVR_ID = !EMPTY_BEERS_MODE && args[0] ? args[0] : '';
 const FILE_PATH = args[1] || 'beers.json';
-const EMPTY_BEERS = EMPTY_BEERS_MODE && isNumeric(args[0]) ? args[0] : 1;
+const EMPTY_BEERS_MAX = 100;
+const EMPTY_BEERS = Math.min(
+  EMPTY_BEERS_MODE && isNumeric(args[0]) ? args[0] : 1,
+  EMPTY_BEERS_MAX
+);
 
 const BEER_URL = `https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid=${ATVR_ID}`;
 const NAME_ID = '#ctl01_ctl01_Label_ProductName';
