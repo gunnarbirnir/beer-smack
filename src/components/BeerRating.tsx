@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Typography,
   makeStyles,
@@ -9,10 +9,12 @@ import {
 } from '@material-ui/core';
 import firebase from 'firebase/app';
 import NumberFormat from 'react-number-format';
+import { Rating } from 'react-simple-star-rating';
 
 import InfoItem from './InfoItem';
 import { IBeer, IUser } from '../interfaces';
 import { CONTENT_WIDTH } from '../constants';
+import useObjectSize from '../hooks/useObjectSize';
 
 interface IProps {
   isBlind: boolean;
@@ -43,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.error.main,
     marginTop: theme.spacing(1),
   },
+  starRatingContainer: {
+    marginTop: theme.spacing(2),
+  },
   nextPrevButtons: {
     marginTop: theme.spacing(4),
   },
@@ -61,8 +66,11 @@ const BeerRating: React.FC<IProps> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const starContainerRef = useRef(null);
+  const { width: starContainerWidth } = useObjectSize(starContainerRef);
 
   const [ratingInput, setRatingInput] = useState('');
+  const [starRatingValue, setStarRatingValue] = useState(0);
   const [updatingRating, setUpdatingRating] = useState(false);
   const [ratingError, setRatingError] = useState('');
   const currentRatingInput = getValueOfRatingInput();
@@ -70,6 +78,17 @@ const BeerRating: React.FC<IProps> = ({
   useEffect(() => {
     setRatingInput('');
   }, [selectedBeerIndex]);
+
+  useEffect(() => {
+    // Rating component has a scale of 0-100
+    const starRating = (currentRating || 0) * 10;
+    setStarRatingValue(starRating);
+  }, [currentRating]);
+
+  const starWidth = useMemo(() => {
+    // Set max width and divide available space
+    return Math.min(starContainerWidth, 450) / 10;
+  }, [starContainerWidth]);
 
   return (
     <React.Fragment>
@@ -96,7 +115,8 @@ const BeerRating: React.FC<IProps> = ({
           <InfoItem label="Lýsing" text={currentBeer.description} />
         </>
       )}
-      {renderForm()}
+      {/* renderForm() */}
+      {renderStarRating()}
       {currentRating !== null && (
         <Typography
           variant="body2"
@@ -136,12 +156,32 @@ const BeerRating: React.FC<IProps> = ({
     );
   }
 
+  function renderStarRating() {
+    return (
+      <div className={classes.starRatingContainer} ref={starContainerRef}>
+        <Rating
+          allowHalfIcon
+          iconsCount={10}
+          size={starWidth}
+          fillColor={theme.palette.primary.main}
+          emptyColor={theme.palette.grey[300]}
+          readonly={updatingRating}
+          ratingValue={starRatingValue}
+          onClick={(newVal) => {
+            setStarRatingValue(newVal);
+            updateBeerRating(currentUser.id, currentBeer.id, newVal / 10);
+          }}
+        />
+      </div>
+    );
+  }
+
   function renderForm() {
     return (
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          updateBeerRating(currentUser.id, currentBeer.id);
+          updateBeerRating(currentUser.id, currentBeer.id, currentRatingInput);
         }}
       >
         <Grid container direction="column">
@@ -242,13 +282,13 @@ const BeerRating: React.FC<IProps> = ({
     );
   }
 
-  function updateBeerRating(userId: string, beerId: string) {
+  function updateBeerRating(userId: string, beerId: string, rating: number) {
     setUpdatingRating(true);
 
     firebase
       .database()
       .ref(`rooms/${roomCode}/users/${userId}/ratings/${beerId}`)
-      .set(currentRatingInput)
+      .set(rating)
       .then(() => {
         setUpdatingRating(false);
         setRatingInput('');
