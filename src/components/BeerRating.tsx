@@ -283,7 +283,6 @@ const BeerRating: React.FC<IProps> = ({
   }
 
   function updateBeerRating(userId: string, beerId: string, rating: number) {
-    console.log('UPDATE');
     setUpdatingRating(true);
 
     firebase
